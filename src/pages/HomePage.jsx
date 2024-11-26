@@ -1,7 +1,6 @@
-import React from 'react'
-import HomePageStart from '../components/HomePage/HomePageStart';
-import FilterBar from '../components/HomePage/FilterBar';
-import Categories from '../components/HomePage/Categories';
+import HomePageStart from "../components/HomePage/HomePageStart";
+import FilterBar from "../components/HomePage/FilterBar";
+import Categories from "../components/HomePage/Categories";
 import Card from "../components/Card";
 
 import temp1 from "../assets/TemporaryImages/cat1.jpg";
@@ -11,7 +10,7 @@ import temp3 from "../assets/TemporaryImages/cat3.jpg";
 import temp4 from "../assets/TemporaryImages/dog1.jpg";
 import temp5 from "../assets/TemporaryImages/dog2.jpg";
 import temp6 from "../assets/TemporaryImages/dog3.jpg";
-import Footer from '../components/Footer';
+import Footer from "../components/Footer";
 
 const catData = [
   {
@@ -57,7 +56,9 @@ const HomePage = () => {
       <Categories />
       <div className="flex items-center justify-center w-full">
         <div className="flex-grow border-b-4 border-[#5F5B5BB2]"></div>
-        <span className="text-[#5F5B5B] font-poppins font-semibold text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] mx-4">Cats</span>
+        <span className="text-[#5F5B5B] font-poppins font-semibold text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] mx-4">
+          Cats
+        </span>
         <div className="flex-grow border-b-4 border-[#5F5B5BB2]"></div>
       </div>
       <div className="w-full flex justify-center items-center py-10">
@@ -69,7 +70,9 @@ const HomePage = () => {
       </div>
       <div className="flex items-center justify-center w-full">
         <div className="flex-grow border-b-4 border-[#5F5B5BB2]"></div>
-        <span className="text-[#5F5B5B] font-poppins font-semibold text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] mx-4">Dogs</span>
+        <span className="text-[#5F5B5B] font-poppins font-semibold text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] mx-4">
+          Dogs
+        </span>
         <div className="flex-grow border-b-4 border-[#5F5B5BB2]"></div>
       </div>
       <div className="w-full flex justify-center items-center py-10">
@@ -81,7 +84,7 @@ const HomePage = () => {
       </div>
       <Footer />
     </div>
-  )
-}
+  );
+};
 
 export default HomePage;
