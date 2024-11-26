@@ -11,6 +11,9 @@ export default {
                 light: '#FEBFC7',
                 button: '#FFE5E6',
               },
+              grey: {
+                light: '#5F5B5B',
+              }
             },
             fontFamily: {
               inter: ['Inter', 'sans-serif'],
