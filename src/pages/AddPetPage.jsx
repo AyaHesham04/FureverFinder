@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import js-cookie
 import cam from "../assets/AddPetPage/cam.png";
+
 const AddPet = () => {
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
