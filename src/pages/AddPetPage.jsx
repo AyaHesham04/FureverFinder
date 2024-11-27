@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import js-cookie
 import cam from "../assets/AddPetPage/cam.png";
+import dogImage from "../assets/SignUpPage/SignupDog.png";
 
 const AddPet = () => {
   const navigate = useNavigate();
@@ -94,17 +95,23 @@ const AddPet = () => {
     }
   };
   return (
-    <div className="relative h-screen w-screen bg-stripes flex items-center justify-center">
+    <div className="relative h-screen w-screen scrollbar-hide bg-stripes flex items-center justify-center">
       <div className="relative z-10 flex items-center justify-center pt-7 max-[430px]:pt-5 lg:pt-12 max-h-full">
         <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
-          <form className="w-full h-full" onSubmit={handleSubmit}>
+          {/* Dog image */}
+          <img
+            src={dogImage}
+            alt="Dog hanging"
+            className="absolute top-[-110px] lg:top-[-105px] max-[430px]:top-[-90px] right-1/4 transform translate-x-full w-[110px] lg:w-[105px] max-[430px]:w-[90px] block max-[430px]:hidden"
+          />
+          <form className="w-full h-full overflow-y-auto scrollbar-hide" onSubmit={handleSubmit}>
             {/* Image Upload Section */}
             <div className="flex flex-col items-center mb-7">
               {/* Preview selected images */}
-              {selectedImages.length == 0 ? <img src={cam} /> : null}
+              {selectedImages.length == 0 ? <img src={cam} className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[430px]:w-18 max-[430px]:h-16" /> : null}
               {selectedImages.length == 0 ? (
                 <button
-                  className="absolute max-[430px]:top-[110px] max-[430px]:right-[70px] max-[640px]:top-[130px] max-[640px]:right-[140px] sm:right-[140px] sm:top-[130px] lg:right-[200px] lg:top-[120px] w-16 h-16 bg-pink-light rounded-lg"
+                  className="absolute max-[430px]:top-[70px] max-[430px]:right-[130px] sm:right-[195px] sm:top-[100px] md:right-[200px] md:top-[90px] lg:right-[250px] lg:top-[90px] xl:right-[230px] xl:top-[100px] 2xl:right-[220px] 2xl:top-[110px] 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg"
                   type="button"
                   onClick={() => document.getElementById("imageUpload").click()} // Trigger file input click
                 >
@@ -114,7 +121,7 @@ const AddPet = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="white"
-                    className="size-15"
+                    className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -130,12 +137,12 @@ const AddPet = () => {
                     <img
                       src={image}
                       alt={`Preview ${index}`}
-                      className="w-32 h-32 object-cover rounded-lg"
+                      className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[430px]:w-18 max-[430px]:h-16 object-cover rounded-lg"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white w-6 h-6 rounded-full flex items-center justify-center"
+                      className="absolute top-1 right-1 bg-red-500 text-white 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 rounded-full flex items-center justify-center"
                     >
                       ✕
                     </button>
@@ -146,7 +153,7 @@ const AddPet = () => {
               {selectedImages.length > 0 ? (
                 <button
                   type="button"
-                  className="mt-4 w-16 h-16 bg-pink-light rounded-lg flex items-center justify-center"
+                  className="mt-2 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg flex items-center justify-center"
                   onClick={() => document.getElementById("imageUpload").click()}
                 >
                   <svg
@@ -155,7 +162,7 @@ const AddPet = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="white"
-                    className="w-8 h-8"
+                    className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -183,11 +190,10 @@ const AddPet = () => {
                 placeholder="Pet Name"
                 value={formData.pet_name}
                 onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${
-                  errors.pet_name
-                    ? "border-red-500"
-                    : "border-[rgba(95,91,91,0.3)]"
-                } rounded-lg text-sm`}
+                className={`w-4/5 px-3 py-2 border ${errors.pet_name
+                  ? "border-red-500"
+                  : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
               />
               {errors.pet_name && (
                 <p className="text-red-500 text-xs mt-1">
@@ -195,82 +201,78 @@ const AddPet = () => {
                 </p>
               )}
             </div>
-
-            {/* Gender Selection */}
-            <div className="mb-5">
-              <select
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${
-                  errors.gender
+            <div className="grid lg:w-4/5 grid-cols-1 lg:grid-cols-2 m-auto gap-x-4">
+              {/* Gender Selection */}
+              <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
+                <select
+                  name="gender"
+                  value={formData.gender}
+                  onChange={handleChange}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.gender
                     ? "border-red-500"
                     : "border-[rgba(95,91,91,0.3)]"
-                } rounded-lg text-sm`}
-              >
-                <option value="" disabled>
-                  Select Gender
-                </option>
-                <option value="Male">Male</option>
-                <option value="Female">Female</option>
-              </select>
-              {errors.gender && (
-                <p className="text-red-500 text-xs mt-1">{errors.gender[0]}</p>
-              )}
-            </div>
+                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                >
+                  <option value="" disabled>
+                    Select Gender
+                  </option>
+                  <option value="Male">Male</option>
+                  <option value="Female">Female</option>
+                </select>
+                {errors.gender && (
+                  <p className="text-red-500 text-xs mt-1">{errors.gender[0]}</p>
+                )}
+              </div>
 
-            {/* Type Selection */}
-            <div className="mb-5">
-              <select
-                name="type"
-                value={formData.type}
-                onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${
-                  errors.type ? "border-red-500" : "border-[rgba(95,91,91,0.3)]"
-                } rounded-lg text-sm`}
-              >
-                <option value="" disabled>
-                  Select Type
-                </option>
-                <option value="Dog">Dog</option>
-                <option value="Cat">Cat</option>
-              </select>
-              {errors.type && (
-                <p className="text-red-500 text-xs mt-1">{errors.type[0]}</p>
-              )}
+              {/* Type Selection */}
+              <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
+                <select
+                  name="type"
+                  value={formData.type}
+                  onChange={handleChange}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.type ? "border-red-500" : "border-[rgba(95,91,91,0.3)]"
+                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                >
+                  <option value="" disabled>
+                    Select Type
+                  </option>
+                  <option value="Dog">Dog</option>
+                  <option value="Cat">Cat</option>
+                </select>
+                {errors.type && (
+                  <p className="text-red-500 text-xs mt-1">{errors.type[0]}</p>
+                )}
+              </div>
             </div>
-
             {/* Year and Month Fields */}
             <div className="grid lg:w-4/5 grid-cols-1 lg:grid-cols-2 m-auto gap-x-4">
-              <div className="mb-5">
+              <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
                 <input
                   type="text"
                   name="year"
                   placeholder="Yrs"
                   value={formData.year}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${
-                    errors.year
-                      ? "border-red-500"
-                      : "border-[rgba(95,91,91,0.3)]"
-                  } rounded-lg text-sm`}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.year
+                    ? "border-red-500"
+                    : "border-[rgba(95,91,91,0.3)]"
+                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
                 />
                 {errors.year && (
                   <p className="text-red-500 text-xs mt-1">{errors.year[0]}</p>
                 )}
               </div>
-              <div className="mb-5">
+              <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
                 <input
                   type="text"
                   name="month"
                   placeholder="Month"
                   value={formData.month}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${
-                    errors.month
-                      ? "border-red-500"
-                      : "border-[rgba(95,91,91,0.3)]"
-                  } rounded-lg text-sm`}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.month
+                    ? "border-red-500"
+                    : "border-[rgba(95,91,91,0.3)]"
+                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
                 />
                 {errors.month && (
                   <p className="text-red-500 text-xs mt-1">{errors.month[0]}</p>
@@ -279,18 +281,17 @@ const AddPet = () => {
             </div>
 
             {/* Address Field */}
-            <div className="mb-5">
+            <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
               <input
                 type="text"
                 name="address"
                 placeholder="Address"
                 value={formData.address}
                 onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${
-                  errors.address
-                    ? "border-red-500"
-                    : "border-[rgba(95,91,91,0.3)]"
-                } rounded-lg text-sm`}
+                className={`w-4/5 px-3 py-2 border ${errors.address
+                  ? "border-red-500"
+                  : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
               />
               {errors.address && (
                 <p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>
@@ -298,17 +299,16 @@ const AddPet = () => {
             </div>
 
             {/* Description Field */}
-            <div className="mb-5">
+            <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
               <textarea
                 name="description"
                 placeholder="Description"
                 value={formData.description}
                 onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${
-                  errors.description
-                    ? "border-red-500"
-                    : "border-[rgba(95,91,91,0.3)]"
-                } rounded-lg text-sm`}
+                className={`w-4/5 px-3 py-2 border ${errors.description
+                  ? "border-red-500"
+                  : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
               />
               {errors.description && (
                 <p className="text-red-500 text-xs mt-1">
@@ -319,25 +319,25 @@ const AddPet = () => {
 
             {/* Status (Radio Buttons) */}
             <div className="flex justify-center items-center space-x-20 mb-4">
-              <label className="flex text-xl">
+              <label className="flex text-sm max-[430px]:text-xs lg:text-md font-inter">
                 <input
                   type="radio"
                   name="status"
                   value="Pairing"
                   checked={formData.status === "Pairing"}
                   onChange={handleChange}
-                  className="mr-2 peer appearance-none w-6 h-6 border-2 border-gray-500 rounded-full checked:bg-pink-light"
+                  className="mr-2 peer appearance-none 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Pairing
               </label>
-              <label className="flex text-xl">
+              <label className="flex text-sm max-[430px]:text-xs lg:text-md font-inter">
                 <input
                   type="radio"
                   name="status"
                   value="Adoption"
                   checked={formData.status === "Adoption"}
                   onChange={handleChange}
-                  className="mr-2 peer appearance-none w-6 h-6 border-2 border-gray-500 rounded-full checked:bg-pink-light"
+                  className="mr-2 peer appearance-none 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Adoption
               </label>
@@ -346,7 +346,7 @@ const AddPet = () => {
             {/* Submit Button */}
             <button
               type="submit"
-              className="w-1/2 bg-pink-button text-[#5F5B5B] py-2 rounded-lg hover:rounded-full font-poppins font-semibold text-[18px] shadow-lg border border-[rgba(95,91,91,0.3)]"
+              className="w-1/2 bg-pink-button text-[#5F5B5B] py-2 rounded-lg hover:rounded-full font-poppins font-semibold text-[18px] max-[430px]:text-[14px] 2xl:text-[18px] shadow-lg border border-[rgba(95,91,91,0.3)]"
             >
               {loading ? "Loading..." : "Add Your Pet"}
             </button>
