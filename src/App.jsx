@@ -6,9 +6,10 @@ import Login from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import PetDetails from "./pages/PetDetailsPage";
 import AddPet from "./pages/AddPetPage";
-import { ToastContainer } from "react-toastify"; // Import ToastContainer
-import "react-toastify/dist/ReactToastify.css"; // Import CSS for toast notifications
-import ProfilePage from "./pages/profilePage";
+import ProfilePage from "./pages/ProfilePage";
+import ProtectedRoute from "./auth/ProtectedRoute";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 function App() {
   return (
@@ -18,14 +19,28 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/profile" element={<ProfilePage />} />
           <Route path="/start" element={<StartPage />} />
           <Route path="/pet/:id" element={<PetDetails />} />
-          <Route path="/add-pet" element={<AddPet />} />
+          {/* Protected Routes */}
+          <Route
+            path="/profile"
+            element={
+              <ProtectedRoute>
+                <ProfilePage />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/add-pet"
+            element={
+              <ProtectedRoute>
+                <AddPet />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </Router>
 
-      {/* ToastContainer will render the toast notifications */}
       <ToastContainer
         position="top-right"
         autoClose={5000}

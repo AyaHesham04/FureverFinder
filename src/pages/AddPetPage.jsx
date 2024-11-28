@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import js-cookie
 import cam from "../assets/AddPetPage/cam.png";
 import dogImage from "../assets/SignUpPage/SignupDog.png";
+import BackButton from "../components/BackButton";
 
 const AddPet = () => {
   const navigate = useNavigate();
@@ -12,14 +13,15 @@ const AddPet = () => {
     pet_name: "",
     gender: "",
     year: "",
-    Month: "",
+    month: "",
     address: "",
+    weight: "",
     description: "",
-    status: "",
     type: "",
+    status: "",
   });
   const [selectedImages, setSelectedImages] = useState([]);
-
+  const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
   const [errors, setErrors] = useState({});
 
@@ -27,9 +29,12 @@ const AddPet = () => {
     const files = Array.from(event.target.files);
     const newImages = files.map((file) => URL.createObjectURL(file));
     setSelectedImages((prev) => [...prev, ...newImages]);
+    setSelectedFiles((prev) => [...prev, ...files]);
   };
+
   const handleRemoveImage = (index) => {
     setSelectedImages((prev) => prev.filter((_, i) => i !== index));
+    setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
   const handleChange = (e) => {
@@ -40,53 +45,48 @@ const AddPet = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
-    setErrors({}); // Reset errors
+    setErrors({});
 
     try {
       const data = new FormData();
 
-      // Convert image URLs to Blobs and append to FormData
-      await Promise.all(
-        selectedImages.map(async (image, index) => {
-          const blob = await fetch(image).then((r) => r.blob());
-          data.append(`images[${index}]`, blob);
-        })
-      );
+      // Append images to FormData
+      selectedFiles.forEach((image, index) => {
+        console.log(typeof image);
+        data.append(`images[${index}]`, image);
+      });
 
-      // Append other form fields
-      data.append("pet_name", formData.pet_name);
-      data.append("gender", formData.gender);
-      data.append("year", formData.year);
-      data.append("month", formData.month);
-      data.append("address", formData.address);
-      data.append("weight", formData.weight);
-      data.append("description", formData.description);
-      data.append("type", formData.type);
-      data.append("status", formData.status);
+      // Append other fields to FormData
+      Object.keys(formData).forEach((key) => {
+        data.append(key, formData[key]);
+      });
 
-      // Get the token from the cookies
+      // Get token from cookies
       const token = Cookies.get("auth_token");
 
-      // Make the POST request
+      // API request
+      console.log("data", data);
+
       const response = await axios.post(
         "http://127.0.0.1:8000/api/pets/store",
         data,
         {
           headers: {
             "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`, // Include the token in the Authorization header
+            Authorization: `Bearer ${token}`,
           },
         }
       );
 
-      // Handle success response
+      // Handle success
+      console.log("response", response);
+
       toast.success("Pet added successfully!");
-      navigate("/success-page"); // Redirect to a success page or another route
+      navigate("/");
     } catch (error) {
-      // Handle errors
+      console.log("error", error);
       if (error.response && error.response.data) {
-        console.log(error.response.data);
-        setErrors(error.response.data.errors); // Set validation errors
+        setErrors(error.response.data.error);
       } else {
         toast.error("Something went wrong!");
       }
@@ -96,6 +96,8 @@ const AddPet = () => {
   };
   return (
     <div className="relative h-screen w-screen scrollbar-hide bg-stripes flex items-center justify-center">
+      <BackButton></BackButton>
+
       <div className="relative z-10 flex items-center justify-center pt-7 max-[430px]:pt-5 lg:pt-12 max-h-full">
         <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
           {/* Dog image */}
@@ -104,11 +106,19 @@ const AddPet = () => {
             alt="Dog hanging"
             className="absolute top-[-110px] lg:top-[-105px] max-[430px]:top-[-90px] right-1/4 transform translate-x-full w-[110px] lg:w-[105px] max-[430px]:w-[90px] block max-[430px]:hidden"
           />
-          <form className="w-full h-full overflow-y-auto scrollbar-hide" onSubmit={handleSubmit}>
+          <form
+            className="w-full h-full overflow-y-auto scrollbar-hide"
+            onSubmit={handleSubmit}
+          >
             {/* Image Upload Section */}
             <div className="flex flex-col items-center mb-7">
               {/* Preview selected images */}
-              {selectedImages.length == 0 ? <img src={cam} className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[430px]:w-18 max-[430px]:h-16" /> : null}
+              {selectedImages.length == 0 ? (
+                <img
+                  src={cam}
+                  className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[430px]:w-18 max-[430px]:h-16"
+                />
+              ) : null}
               {selectedImages.length == 0 ? (
                 <button
                   className="absolute max-[430px]:top-[70px] max-[430px]:right-[130px] sm:right-[195px] sm:top-[100px] md:right-[200px] md:top-[90px] lg:right-[250px] lg:top-[90px] xl:right-[230px] xl:top-[100px] 2xl:right-[220px] 2xl:top-[110px] 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg"
@@ -153,7 +163,11 @@ const AddPet = () => {
               {selectedImages.length > 0 ? (
                 <button
                   type="button"
-                  className="mt-2 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg flex items-center justify-center"
+                  className={` ${
+                    errors.images
+                      ? "border-red-500"
+                      : "border-[rgba(95,91,91,0.3)]"
+                  } mt-2 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg flex items-center justify-center`}
                   onClick={() => document.getElementById("imageUpload").click()}
                 >
                   <svg
@@ -172,6 +186,9 @@ const AddPet = () => {
                   </svg>
                 </button>
               ) : null}
+              {errors.images && (
+                <p className="text-red-500 text-xs mt-1">{errors.images[0]}</p>
+              )}
               <input
                 type="file"
                 id="imageUpload"
@@ -190,10 +207,11 @@ const AddPet = () => {
                 placeholder="Pet Name"
                 value={formData.pet_name}
                 onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${errors.pet_name
-                  ? "border-red-500"
-                  : "border-[rgba(95,91,91,0.3)]"
-                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                className={`w-4/5 px-3 py-2 border ${
+                  errors.pet_name
+                    ? "border-red-500"
+                    : "border-[rgba(95,91,91,0.3)]"
+                } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
               />
               {errors.pet_name && (
                 <p className="text-red-500 text-xs mt-1">
@@ -208,19 +226,22 @@ const AddPet = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.gender
-                    ? "border-red-500"
-                    : "border-[rgba(95,91,91,0.3)]"
-                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${
+                    errors.gender
+                      ? "border-red-500"
+                      : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
                 >
                   <option value="" disabled>
                     Select Gender
                   </option>
-                  <option value="Male">Male</option>
-                  <option value="Female">Female</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
                 </select>
                 {errors.gender && (
-                  <p className="text-red-500 text-xs mt-1">{errors.gender[0]}</p>
+                  <p className="text-red-500 text-xs mt-1">
+                    {errors.gender[0]}
+                  </p>
                 )}
               </div>
 
@@ -230,14 +251,17 @@ const AddPet = () => {
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.type ? "border-red-500" : "border-[rgba(95,91,91,0.3)]"
-                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${
+                    errors.type
+                      ? "border-red-500"
+                      : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
                 >
                   <option value="" disabled>
                     Select Type
                   </option>
-                  <option value="Dog">Dog</option>
-                  <option value="Cat">Cat</option>
+                  <option value="dog">Dog</option>
+                  <option value="cat">Cat</option>
                 </select>
                 {errors.type && (
                   <p className="text-red-500 text-xs mt-1">{errors.type[0]}</p>
@@ -253,10 +277,11 @@ const AddPet = () => {
                   placeholder="Yrs"
                   value={formData.year}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.year
-                    ? "border-red-500"
-                    : "border-[rgba(95,91,91,0.3)]"
-                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${
+                    errors.year
+                      ? "border-red-500"
+                      : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
                 />
                 {errors.year && (
                   <p className="text-red-500 text-xs mt-1">{errors.year[0]}</p>
@@ -269,10 +294,11 @@ const AddPet = () => {
                   placeholder="Month"
                   value={formData.month}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.month
-                    ? "border-red-500"
-                    : "border-[rgba(95,91,91,0.3)]"
-                    } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                  className={`w-4/5 lg:w-full px-3 py-2 border ${
+                    errors.month
+                      ? "border-red-500"
+                      : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
                 />
                 {errors.month && (
                   <p className="text-red-500 text-xs mt-1">{errors.month[0]}</p>
@@ -288,10 +314,11 @@ const AddPet = () => {
                 placeholder="Address"
                 value={formData.address}
                 onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${errors.address
-                  ? "border-red-500"
-                  : "border-[rgba(95,91,91,0.3)]"
-                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                className={`w-4/5 px-3 py-2 border ${
+                  errors.address
+                    ? "border-red-500"
+                    : "border-[rgba(95,91,91,0.3)]"
+                } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
               />
               {errors.address && (
                 <p className="text-red-500 text-xs mt-1">{errors.address[0]}</p>
@@ -305,10 +332,11 @@ const AddPet = () => {
                 placeholder="Description"
                 value={formData.description}
                 onChange={handleChange}
-                className={`w-4/5 px-3 py-2 border ${errors.description
-                  ? "border-red-500"
-                  : "border-[rgba(95,91,91,0.3)]"
-                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+                className={`w-4/5 px-3 py-2 border ${
+                  errors.description
+                    ? "border-red-500"
+                    : "border-[rgba(95,91,91,0.3)]"
+                } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
               />
               {errors.description && (
                 <p className="text-red-500 text-xs mt-1">
@@ -323,8 +351,8 @@ const AddPet = () => {
                 <input
                   type="radio"
                   name="status"
-                  value="Pairing"
-                  checked={formData.status === "Pairing"}
+                  value="pairing"
+                  checked={formData.status === "pairing"}
                   onChange={handleChange}
                   className="mr-2 peer appearance-none 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
@@ -334,15 +362,17 @@ const AddPet = () => {
                 <input
                   type="radio"
                   name="status"
-                  value="Adoption"
-                  checked={formData.status === "Adoption"}
+                  value="adopted"
+                  checked={formData.status === "adopted"}
                   onChange={handleChange}
                   className="mr-2 peer appearance-none 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Adoption
               </label>
             </div>
-
+            {errors.status && (
+              <p className="text-red-500 text-xs mt-1">{errors.status[0]}</p>
+            )}
             {/* Submit Button */}
             <button
               type="submit"
