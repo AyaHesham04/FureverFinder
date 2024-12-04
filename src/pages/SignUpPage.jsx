@@ -3,6 +3,8 @@ import axios from "axios";
 import { toast } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import js-cookie
+import dogImage from "../assets/SignUpPage/SignupDog.png";
+import BackButton from "../components/BackButton";
 
 const Signup = () => {
   const navigate = useNavigate();
@@ -71,8 +73,16 @@ const Signup = () => {
 
   return (
     <div className="relative h-screen w-screen bg-stripes flex items-center justify-center">
+      <BackButton redirectTo="/start"></BackButton>
+
       <div className="relative z-10 flex items-center justify-center pt-7 max-[430px]:pt-5 lg:pt-12 max-h-full">
         <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
+          {/* Dog image */}
+          <img
+            src={dogImage}
+            alt="Dog hanging"
+            className="absolute top-[-110px] lg:top-[-105px] max-[430px]:top-[-90px] right-1/4 transform translate-x-full w-[110px] lg:w-[105px] max-[430px]:w-[90px]"
+          />
           <h1 className="text-pink-light text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] font-bold italic font-inter mb-7 max-[430px]:mb-4 2xl:mb-6">
             Join Our Fur-Ever Family!
           </h1>

@@ -4,6 +4,7 @@ import { toast } from "react-toastify";
 import dogImage from "../assets/SignUpPage/SignupDog.png";
 import { useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import js-cookie to handle cookies
+import BackButton from "../components/BackButton";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -45,6 +46,7 @@ const Login = () => {
 
   return (
     <div className="relative h-screen w-screen bg-stripes flex items-center justify-center">
+      <BackButton redirectTo="/start"></BackButton>
       {/* Form container */}
       <div className="relative z-10 flex items-center justify-center pt-7 max-[430px]:pt-5 lg:pt-12 max-h-full">
         <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-9 lg:py-8 max-[430px]:py-7 rounded-lg shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
