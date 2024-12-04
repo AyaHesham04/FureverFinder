@@ -17,19 +17,19 @@ const MediaSlider = ({ mediaList }) => {
 
     return (
         <div className="relative w-full max-w-lg mx-auto">
-            <div className="overflow-hidden rounded-lg shadow-lg">
+            <div className="overflow-hidden rounded-lg shadow-lg 2xl:w-96 2xl:h-72 xl:w-80 xl:h-60 lg:w-72 lg:h-52 md:w-64 md:h-48 sm:w-60 sm:h-44 max-[430px]:w-36 max-[430px]:h-32 max-[400px]:w-32 max-[400px]:h-28">
                 {mediaList[currentIndex].type === "image" && (
                     <img
                         src={mediaList[currentIndex].url}
                         alt={`Slide ${currentIndex}`}
-                        className="w-full h-auto"
+                        className="w-full h-full"
                     />
                 )}
                 {mediaList[currentIndex].type === "video" && (
                     <video
                         src={mediaList[currentIndex].url}
                         controls
-                        className="w-full h-auto"
+                        className="w-full h-full"
                     ></video>
                 )}
             </div>
@@ -37,13 +37,13 @@ const MediaSlider = ({ mediaList }) => {
             {/* Navigation Controls */}
             <button
                 onClick={goToPrev}
-                className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                className="absolute top-1/2 left-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-1 rounded-full"
             >
                 &larr;
             </button>
             <button
                 onClick={goToNext}
-                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 rounded-full"
+                className="absolute top-1/2 right-2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-1 rounded-full"
             >
                 &rarr;
             </button>
@@ -53,7 +53,7 @@ const MediaSlider = ({ mediaList }) => {
                 {mediaList.map((_, index) => (
                     <button
                         key={index}
-                        className={`w-3 h-3 mx-1 rounded-full ${index === currentIndex
+                        className={`w-2 h-2 mx-1 rounded-full ${index === currentIndex
                             ? "bg-pink-light"
                             : "bg-gray-300 hover:bg-gray-400"
                             }`}
