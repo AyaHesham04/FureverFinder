@@ -6,9 +6,10 @@ import owner from "../assets/TemporaryImages/customer.jpg";
 import BackButton from "../components/BackButton";
 import MediaSlider from "../components/MediaPreviewList";
 import { useLocation } from "react-router-dom";
+
 const PetDetails = (state) => {
   const location = useLocation();
-  const petData = location.state.pet; // Access the passed state here
+  const petData = location.state.pet;
 
   console.log(petData);
   const mediaData = [
