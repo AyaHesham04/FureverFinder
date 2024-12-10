@@ -18,10 +18,13 @@ const Login = () => {
     setLoading(true); // Set loading state to true when starting the request
 
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/login", {
-        email,
-        password,
-      });
+      const response = await axios.post(
+        "https://api-fureverfinders.amrnabih.com/api/login",
+        {
+          email,
+          password,
+        }
+      );
 
       // Assuming the token is in response.data.token
       const token = response.data.token;

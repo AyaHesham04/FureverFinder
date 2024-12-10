@@ -9,75 +9,26 @@ const HomePage = () => {
   const [catData, setCatData] = useState([]);
   const [dogData, setDogData] = useState([]);
   const [loading, setLoading] = useState(true);
+  const handleLoading = (newLoadingState) => {
+    console.log("loadoing", loading);
+    setLoading(newLoadingState);
+  };
+  const handleCatDataUpdate = (newCatData) => {
+    setCatData(newCatData);
+  };
 
-  useEffect(() => {
-    const fetchPets = async () => {
-      try {
-        const response = await fetch(
-          "https://api-fureverfinders.amrnabih.com/api/pets/index"
-        );
-        const data = await response.json();
-
-        // Map the data to match the structure used in the `Card` component
-        setCatData(
-          data.cats
-            .map((cat) => ({
-              id: cat.id,
-              name: cat.pet_name,
-              gender: cat.gender,
-              images: cat.images,
-              year: cat.year,
-              month: cat.month,
-              address: cat.address,
-              weight: cat.weight,
-              description: cat.description,
-              user_id: cat.user_id,
-              created_at: cat.created_at,
-              status: cat.status,
-            }))
-            .slice(0, 3)
-        );
-
-        setDogData(
-          data.dogs
-            .map((dog) => ({
-              id: dog.id,
-              name: dog.pet_name,
-              gender: dog.gender,
-              images: dog.images,
-              year: dog.year,
-              month: dog.month,
-              address: dog.address,
-              weight: dog.weight,
-              description: dog.description,
-              user_id: dog.user_id,
-              created_at: dog.created_at,
-              status: dog.status,
-            }))
-            .slice(0, 3)
-        );
-      } catch (error) {
-        console.error("Error fetching pets data:", error);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPets();
-  }, []);
-
-  if (loading) {
-    return (
-      <div className="w-full h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    );
-  }
+  const handleDogDataUpdate = (newDogData) => {
+    setDogData(newDogData);
+  };
 
   return (
     <div className="w-full h-screen">
       <HomePageStart />
-      <FilterBar />
+      <FilterBar
+        onUpdateCatData={handleCatDataUpdate}
+        onUpdateDogData={handleDogDataUpdate}
+        onUpdateLoading={handleLoading}
+      />
       <Categories />
 
       {/* Cats Section */}
@@ -88,13 +39,19 @@ const HomePage = () => {
         </span>
         <div className="flex-grow border-b-4 border-[#5F5B5BB2]"></div>
       </div>
-      <div className="w-full flex justify-center items-center py-10">
-        <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
-          {catData.map((cat, index) => (
-            <Card key={index} id={cat.id} {...cat} />
-          ))}
+      {!loading ? (
+        <div className="w-full flex justify-center items-center py-10">
+          <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
+            {catData.map((cat, index) => (
+              <Card key={index} id={cat.id} {...cat} />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      )}
 
       {/* Dogs Section */}
       <div className="flex items-center justify-center w-full">
@@ -104,13 +61,19 @@ const HomePage = () => {
         </span>
         <div className="flex-grow border-b-4 border-[#5F5B5BB2]"></div>
       </div>
-      <div className="w-full flex justify-center items-center py-10">
-        <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
-          {dogData.map((dog, index) => (
-            <Card key={index} id={dog.id} {...dog} />
-          ))}
+      {!loading ? (
+        <div className="w-full flex justify-center items-center py-10">
+          <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
+            {dogData.map((dog, index) => (
+              <Card key={index} id={dog.id} {...dog} />
+            ))}
+          </div>
         </div>
-      </div>
+      ) : (
+        <div className="w-full h-screen flex items-center justify-center">
+          Loading...
+        </div>
+      )}
 
       <Footer />
     </div>

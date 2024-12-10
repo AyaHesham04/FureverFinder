@@ -48,27 +48,38 @@ const AddPet = () => {
     setErrors({});
 
     try {
+      console.log("Selected Files: ", selectedFiles);
       const data = new FormData();
 
       // Append images to FormData
-      selectedFiles.forEach((image, index) => {
-        console.log(typeof image);
-        data.append(`images[${index}]`, image);
+      selectedFiles.forEach((file, index) => {
+        if (file instanceof File) {
+          data.append("images[]", file);
+        } else {
+          console.warn(
+            `File at index ${index} is not a valid File object:`,
+            file
+          );
+        }
       });
 
-      // Append other fields to FormData
-      Object.keys(formData).forEach((key) => {
-        data.append(key, formData[key]);
+      // Append other form data
+      Object.entries(formData).forEach(([key, value]) => {
+        data.append(key, value);
       });
+
+      // Debug: Log FormData content
+      console.log("FormData entries:");
+      for (const [key, value] of data.entries()) {
+        console.log(`${key}:`, value);
+      }
 
       // Get token from cookies
       const token = Cookies.get("auth_token");
-
+      console.log(token);
       // API request
-      console.log("data", data);
-
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/pets/store",
+        "https://api-fureverfinders.amrnabih.com/api/pets/store",
         data,
         {
           headers: {
@@ -79,21 +90,28 @@ const AddPet = () => {
       );
 
       // Handle success
-      console.log("response", response);
-
+      console.log("Response:", response.data);
       toast.success("Pet added successfully!");
       navigate("/");
     } catch (error) {
-      console.log("error", error);
-      if (error.response && error.response.data) {
-        setErrors(error.response.data.error);
+      console.error("Error:", error);
+      if (error.response) {
+        if (error.response.data.error === "Token not valid") {
+          toast.error("Token is invalid. Please log in again.");
+          navigate("/login");
+        } else if (error.response.data.error) {
+          setErrors(error.response.data.error); // Validation errors from backend
+        } else {
+          toast.error("An unexpected error occurred.");
+        }
       } else {
-        toast.error("Something went wrong!");
+        toast.error("Cannot connect to the server.");
       }
     } finally {
       setLoading(false);
     }
   };
+
   return (
     <div className="relative h-screen w-screen scrollbar-hide bg-stripes flex items-center justify-center">
       <BackButton></BackButton>
@@ -305,7 +323,24 @@ const AddPet = () => {
                 )}
               </div>
             </div>
-
+            {/* Weight Field */}
+            <div className="mb-5">
+              <input
+                type="number"
+                name="weight"
+                placeholder="Weight (kg)"
+                value={formData.weight}
+                onChange={handleChange}
+                className={`w-4/5 px-3 py-2 border ${
+                  errors.weight
+                    ? "border-red-500"
+                    : "border-[rgba(95,91,91,0.3)]"
+                } rounded-lg text-sm max-[430px]:text-xs lg:text-md`}
+              />
+              {errors.weight && (
+                <p className="text-red-500 text-xs mt-1">{errors.weight[0]}</p>
+              )}
+            </div>
             {/* Address Field */}
             <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
               <input

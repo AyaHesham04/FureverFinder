@@ -27,16 +27,50 @@ const catData = [
 
 function ProfilePage({ userData }) {
   const [fullName, setFullName] = useState("");
+  const [catData, setCatData] = useState([]);
+  const [dogData, setDogData] = useState([]);
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
   useEffect(() => {
-    console.log(userData);
+    console.log("user :", userData);
     if (userData?.user?.fname && userData?.user?.lname) {
       setFullName(
         `${capitalize(userData.user.fname)} ${capitalize(userData.user.lname)}`
       );
     }
+    setCatData(
+      userData.cats.map((cat) => ({
+        id: cat.id,
+        name: cat.pet_name,
+        gender: cat.gender,
+        images: cat.images,
+        year: cat.year,
+        month: cat.month,
+        address: cat.address,
+        weight: cat.weight,
+        description: cat.description,
+        user_id: cat.user_id,
+        created_at: cat.created_at,
+        status: cat.status,
+      }))
+    );
+    setDogData(
+      userData.dogs.map((dog) => ({
+        id: dog.id,
+        name: dog.pet_name,
+        gender: dog.gender,
+        images: dog.images,
+        year: dog.year,
+        month: dog.month,
+        address: dog.address,
+        weight: dog.weight,
+        description: dog.description,
+        user_id: dog.user_id,
+        created_at: dog.created_at,
+        status: dog.status,
+      }))
+    );
   }, [userData]);
 
   return (
@@ -52,6 +86,9 @@ function ProfilePage({ userData }) {
           <div className="w-full flex justify-center items-center py-10">
             <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
               {catData.map((cat, index) => (
+                <Card key={index} {...cat} />
+              ))}
+              {dogData.map((cat, index) => (
                 <Card key={index} {...cat} />
               ))}
             </div>
