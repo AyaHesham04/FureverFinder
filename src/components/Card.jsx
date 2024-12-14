@@ -6,7 +6,7 @@ import { useNavigate } from "react-router-dom";
 export default function Card(pet) {
   // Add `id` to props
   const navigate = useNavigate();
-  console.log(pet);
+  // console.log(pet);
   const handleCardClick = () => {
     navigate(`/pet/${pet.id}`, {
       // Use the `id` prop here

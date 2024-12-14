@@ -7,8 +7,19 @@ import dog from "../../assets/HomePage/dogGrey.png";
 import cat from "../../assets/HomePage/cat.png";
 import femaleDark from "../../assets/HomePage/femaleDark.png";
 import maleDark from "../../assets/HomePage/maleDark.png";
+import LocationPicker from "../LocationPicker";
+
 
 const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
+
+  const [selectedPet, setSelectedPet] = useState("");
+  const [selectedGender, setSelectedGender] = useState("");
+  const [selectedAge, setSelectedAge] = useState("");
+  const [image, setImage] = useState(null);
+  const [location, setLocation] = useState("");
+  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
+
   const fetchPets = async () => {
     try {
       const response = await fetch(
@@ -59,6 +70,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   useEffect(() => {
     fetchPets();
   }, []);
+
   const petOptions = [
     { value: "dog", label: "Dog", icon: dog },
     { value: "cat", label: "Cat", icon: cat },
@@ -74,7 +86,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   for (let i = 0; i < 12; i++) {
     ageOptions.push({
       value: `${i}`,
-      label: `${i} ${i === 1 ? "month" : "months"}`,
+      label: `${i} ${i === 1 ? "mo" : "mo"}`,
     });
   }
 
@@ -82,11 +94,34 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   for (let i = 1; i <= 20; i++) {
     ageOptions.push({
       value: `${i * 12}`,
-      label: `${i} ${i === 1 ? "year" : "years"}`,
+      label: `${i} ${i === 1 ? "yr" : "yrs"}`,
     });
   }
 
-  const dropdownRef = useRef(null); // Ref to track the dropdown menu element
+
+  const petDropdownRef = useRef(null);
+  const genderDropdownRef = useRef(null);
+  const ageDropdownRef = useRef(null);
+
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (petDropdownRef.current && !petDropdownRef.current.contains(event.target)) {
+        setIsPetOpen(false);
+      }
+      if (genderDropdownRef.current && !genderDropdownRef.current.contains(event.target)) {
+        setIsGenderOpen(false);
+      }
+      if (ageDropdownRef.current && !ageDropdownRef.current.contains(event.target)) {
+        setIsAgeOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, []);
 
   const [isPetOpen, setIsPetOpen] = useState(false);
   const togglePetDropdown = () => setIsPetOpen(!isPetOpen);
@@ -97,53 +132,124 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   const [isAgeOpen, setIsAgeOpen] = useState(false);
   const toggleAgeDropdown = () => setIsAgeOpen(!isAgeOpen);
 
-  const toggleDropDowns = () => {
-    setIsPetOpen(!isPetOpen);
-    setIsGenderOpen(!isGenderOpen);
-    setIsAgeOpen(!isAgeOpen);
+  const handleSelectionPet = (option) => {
+    setSelectedPet(option);
+    setIsPetOpen(false);
+    // console.log("Selected Pet:", option);
   };
 
+  const handleSelectionGender = (option) => {
+    setSelectedGender(option);
+    setIsGenderOpen(false);
+    // console.log("Selected Gender:", option);
+  };
+
+  const handleSelectionAge = (value) => {
+    setSelectedAge(value);
+    setIsAgeOpen(false);
+    // console.log("selectedAge",selectedAge);
+  };
+
+  const fileInputRef = useRef(null);  // Create a reference for the file input
+
+  const handleImageChange = (event) => {
+    const file = event.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setImage(reader.result); // Set the image as a data URL
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleChangeImageClick = () => {
+    fileInputRef.current.click();  // Programmatically trigger the file input click
+  };
+
+  const handleImageRemove = () => {
+    setImage(null);
+  };
+
+  const handleLocationClick = (e) => {
+    e.stopPropagation();
+    setIsLocationModalOpen((prev) => !prev);
+  };
+
+  // Close location modal when clicking outside
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsPetOpen(false);
-        setIsGenderOpen(false);
-        setIsAgeOpen(false);
+      if (isLocationModalOpen && !event.target.closest(".location-modal")) {
+        setIsLocationModalOpen(false);
       }
     };
 
-    // Add event listener on mount
     document.addEventListener("mousedown", handleClickOutside);
 
-    // Cleanup event listener on unmount
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, []);
+  }, [isLocationModalOpen]);
+
+  const handleUseCurrentLocation = () => {
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        (position) => {
+          const { latitude, longitude } = position.coords;
+          setLocation(`Lat: ${latitude}, Long: ${longitude}`);
+          setIsLocationModalOpen(false);
+        },
+        (error) => {
+          console.error(error);
+          alert("Unable to retrieve your location.");
+        }
+      );
+    } else {
+      alert("Geolocation is not supported by your browser.");
+    }
+  };
+
+  // Select a predefined location
+  const handleSelectLocation = (selectedLocation) => {
+    setLocation(selectedLocation);
+    setIsLocationModalOpen(false);
+  };
+
+  // const handleChangeLocation = () => {
+  //   // Logic to open a location picker modal or clear the current location
+  //   setIsLocationModalOpen(true);
+  // };
+
+  const handleChangeLocation = () => {
+    setLocation(null); // Reset the location, which can trigger the "Use My Current Location" flow again
+  };
+
+  const handleLocationRemove = () => {
+    setLocation(null);
+  };
 
   return (
     <div className="mx-5 sm:mx-8 mt-4">
-      <div className="bg-[#F5F5F5] w-full grid sm:grid-cols-[2fr_1fr] grid-cols-[3fr_0.5fr] max-[400px]:grid-cols-[4fr_0.1fr] lg:gap-x-10 gap-x-2 items-center justify-center rounded-lg 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px]">
-        <div className="w-full font-inter font-[700] grid grid-cols-3 gap-3 max-[430px]:gap-1 p-3 max-[430px]:p-1 text-black">
+      <div className="bg-[#F5F5F5] w-full grid grid-cols-1 gap-x-2 max-[430px]:gap-x-0 items-center justify-center rounded-lg 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px]">
+        <div className="w-full font-inter font-[700] grid grid-cols-3 gap-3 max-[430px]:gap-2 p-3 text-black">
           <div
-            ref={dropdownRef}
-            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-3  max-[430px]:p-1 text-center"
+            ref={petDropdownRef}
+            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
           >
             <img
-              src={pet}
+              src={selectedPet.icon || pet}
               alt="Pet"
               className="mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
             />
-            <div className="mx-auto">Pet</div>
+            <span>{selectedPet?.label || "Pet"}</span>
             <div
               onClick={togglePetDropdown}
               className="transition-transform mx-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${
-                  isPetOpen ? "rotate-180" : "rotate-0"
-                }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isPetOpen ? "rotate-180" : "rotate-0"
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -157,11 +263,11 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
               </svg>
             </div>
             {isPetOpen && (
-              <ul className="absolute top-full mt-2 bg-white rounded-lg shadow-md w-full text-[#5F5B5B] font-poppins font-semibold">
+              <ul className="z-10 absolute top-full mt-2 bg-white rounded-lg shadow-md w-full text-[#5F5B5B] font-poppins font-semibold">
                 {petOptions.map((option, index) => (
                   <li
                     key={index}
-                    onClick={() => setIsPetOpen(false)}
+                    onClick={() => handleSelectionPet(option)}
                     className="px-4 py-2 cursor-pointer rounded-lg hover:bg-[#7BCFD180] flex items-center space-x-3"
                   >
                     <img
@@ -176,24 +282,23 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             )}
           </div>
           <div
-            ref={dropdownRef}
-            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-3  max-[430px]:p-1 text-center"
+            ref={genderDropdownRef}
+            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
           >
             <img
-              src={gender}
+              src={selectedGender.icon || gender}
               alt="Gender"
               className="mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
             />
-            <div className="mx-auto">Gender</div>
+            <span>{selectedGender?.label || "Gender"}</span>
             <div
               onClick={toggleGenderDropdown}
               className="transition-transform mx-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${
-                  isGenderOpen ? "rotate-180" : "rotate-0"
-                }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${isGenderOpen ? "rotate-180" : "rotate-0"
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -207,11 +312,11 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
               </svg>
             </div>
             {isGenderOpen && (
-              <ul className="absolute top-full mt-2 bg-white rounded-lg shadow-md w-full text-[#5F5B5B] font-poppins font-semibold">
+              <ul className="z-10 absolute top-full mt-2 bg-white rounded-lg shadow-md w-full text-[#5F5B5B] font-poppins font-semibold">
                 {genderOptions.map((option, index) => (
                   <li
                     key={index}
-                    onClick={() => setIsGenderOpen(false)}
+                    onClick={() => handleSelectionGender(option)}
                     className="px-4 py-2 cursor-pointer rounded-lg hover:bg-[#7BCFD180] flex items-center space-x-3 max-[400px]:space-x-1"
                   >
                     <img
@@ -226,24 +331,23 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             )}
           </div>
           <div
-            ref={dropdownRef}
-            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-3  max-[430px]:p-1 text-center"
+            ref={ageDropdownRef}
+            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
           >
             <img
               src={age}
               alt="Age"
               className="mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
             />
-            <div className="mx-auto">Age</div>
+            <span>{selectedAge.label || "Age"}</span>
             <div
               onClick={toggleAgeDropdown}
               className="transition-transform mx-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${
-                  isAgeOpen ? "rotate-180" : "rotate-0"
-                }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isAgeOpen ? "rotate-180" : "rotate-0"
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -257,12 +361,12 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
               </svg>
             </div>
             {isAgeOpen && (
-              <ul className="absolute top-full mt-2 bg-white rounded-lg shadow-md w-full h-[150px] overflow-y-auto text-[#5F5B5B] font-poppins font-semibold">
+              <ul className="z-10 absolute top-full mt-2 bg-white rounded-lg shadow-md w-full h-[150px] overflow-y-auto text-[#5F5B5B] font-poppins font-semibold">
                 {ageOptions.map((option, index) => (
                   <li
                     key={index}
-                    onClick={() => setIsAgeOpen(false)}
-                    className=" px-4 max-[400px]:px-2 py-2 cursor-pointer rounded-lg hover:bg-[#7BCFD180] text-left"
+                    onClick={() => handleSelectionAge(option)}
+                    className="px-4 max-[400px]:px-2 py-2 cursor-pointer rounded-lg hover:bg-[#7BCFD180] text-left"
                   >
                     {option.label}
                   </li>
@@ -271,19 +375,111 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             )}
           </div>
         </div>
-        <div className="w-full grid grid-cols-[1.5fr_1fr] sm:grid-cols-[1fr_1fr] max-[430px]:grid-col-1 font-inter p-3 max-[430px]:p-2 max-[400px]:p-1 items-center max-[430px]:justify-center">
+        <div className="w-full max-[430px]:-mt-2 px-2 grid grid-cols-[1fr_1fr_2fr_2fr] gap-3 max-[430px]:gap-2 font-inter p-2 max-[430px]:p-1 max-[400px]:p-1 items-center max-[430px]:justify-center">
+          {/*Image*/}
+          <div className="relative">
+            <input
+              ref={fileInputRef}  // Attach the ref to the input element
+              type="file"
+              accept="image/*"
+              onChange={handleImageChange}
+              className="opacity-0 absolute cursor-pointer"
+            />
+            <div>
+              {image ? (
+                <>
+                  <img
+                    src={image}
+                    alt="Uploaded"
+                    className="2xl:h-14 2xl:w-14 xl:h-12 xl:w-12 lg:h-10 lg:w-10 md:h-10 md:w-10 sm:h-9 sm:w-9 max-[430px]:h-7 max-[430px]:w-7 rounded-full"
+                  />
+                  <button
+                    className="text-start text-[#7bd0d1] hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
+                    onClick={handleChangeImageClick}  // Trigger the file input click
+                  >
+                    Change
+                  </button>
+                  <button
+                    className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
+                    onClick={handleImageRemove}
+                  >
+                    Remove
+                  </button>
+                </>
+              ) : (
+                <span className="flex items-center justify-center">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-4 max-[430px]:h-4 inline-block mr-2 text-[#424242]"
+                    viewBox="0 0 24 24"
+                  >
+                    <path fill-rule="evenodd" clip-rule="evenodd" d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z" fill="#0F0F0F" />
+                    <path d="M4.80665 17.5211L9.1221 9.60947C9.50112 8.91461 10.4989 8.91461 10.8779 9.60947L14.0465 15.4186L15.1318 13.5194C15.5157 12.8476 16.4843 12.8476 16.8682 13.5194L19.1451 17.5039C19.526 18.1705 19.0446 19 18.2768 19H5.68454C4.92548 19 4.44317 18.1875 4.80665 17.5211Z" fill="#0F0F0F" />
+                    <path d="M18 8C18 9.10457 17.1046 10 16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8Z" />
+                  </svg>
+                </span>
+              )}
+            </div>
+          </div>
+
+          {/*Location*/}
+          <div className="relative flex items-center">
+            {!location && (
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-4 max-[430px]:h-4 inline-block text-[#424242] hover:text-[#7BCFD180] rounded cursor-pointer"
+                fill="currentColor"
+                // onClick={handleLocationClick}
+                onClick={handleUseCurrentLocation}
+              >
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 4.93 7 13 7 13s7-8.07 7-13c0-3.87-3.13-7-7-7zm0 10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
+              </svg>
+            )}
+            {/* {isLocationModalOpen && (
+              <div className="location-modal absolute top-full mt-2 bg-white rounded-lg shadow-md w-full">
+                <div
+                  onClick={handleUseCurrentLocation}
+                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                >
+                  Use My Current Location
+                </div>
+              </div>
+            )} */}
+            {location && (
+              <div className="w-full">
+                <span className="text-[#424242] w-full">{location}</span>
+                <button
+                  className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
+                  // onClick={handleChangeLocation}
+                  onClick={handleChangeLocation}
+                >
+                  Change
+                </button>
+                <button
+                  className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
+                  // onClick={handleChangeLocation}
+                  onClick={handleChangeLocation}
+                >
+                  Remove
+                </button>
+              </div>
+            )}
+            {/* <LocationPicker onLocationSelect={handleLocationSelect} /> */}
+          </div>
           <input
             type="text"
-            placeholder="Search pets..."
-            className="text-[#4242425C] font-[400] block max-[430px]:hidden bg-[#F5F5F5]"
+            placeholder="Search..."
+            className="text-[#4242425C] border rounded p-1 font-[400] bg-[#F5F5F5] m-1"
           />
-          <div className="bg-pink-button border border-[rgba(95,91,91,0.3)] hover:bg-[#7BCFD180] text-white font-[700] w-full inline-block rounded-lg p-2 max-[430px]:p-1 max-[430px]:w-fit text-center shadow-md">
+          <div className="bg-pink-button border border-[rgba(95,91,91,0.3)] hover:bg-[#7BCFD180] text-white font-[700] w-1/2 inline-block rounded-lg p-2 max-[430px]:p-1 max-[430px]:w-full text-center shadow-md">
             <button className="flex justify-center items-center w-fit">
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
                 fill="white"
-                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 inline-block mr-2 max-[430px]:mr-0"
+                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 inline-block mr-2 max-[430px]:mr-0"
               >
                 <path
                   fill-rule="evenodd"
@@ -291,7 +487,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
                   clip-rule="evenodd"
                 />
               </svg>
-              <h1 className="grid max-[430px]:hidden">Search</h1>
+              <h1 className="">Search</h1>
             </button>
           </div>
         </div>
@@ -301,3 +497,5 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
 };
 
 export default FilterBar;
+
+
