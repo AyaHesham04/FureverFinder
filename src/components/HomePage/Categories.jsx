@@ -10,7 +10,7 @@ const Categories = ({ onCategorySelect }) => {
       <div className="px-2 flex space-x-[50px] md:space-x-[50px] lg:space-x-[100px] xl:space-x-[300px] justify-center items-center w-full h-full text-[#5F5B5B] text-[20px] max-[430px]:text-[16px] lg:text-[24px] xl:text-[24px] 2xl:text-[30px]">
         <div
           onClick={() => onCategorySelect("cats")}
-          className="bg-pink-button space-x-2 md:space-x-0 w-[150px] h-[80px] md:w-[200px] md:h-[300px] lg:w-[300px] lg:h-[400px] flex flex-row md:flex-col justify-center items-center rounded-3xl md:rounded-lg shadow-lg hover:bg-[#7BCFD180] md:hover:bg-pink-button md:hover:shadow-2xl transition-all duration-300 ease-in-out"
+          className="bg-pink-button space-x-2 md:space-x-0 w-[150px] h-[80px] md:w-[200px] md:h-[300px] lg:w-[300px] lg:h-[400px] flex flex-row md:flex-col justify-center items-center rounded-3xl md:rounded-lg shadow-lg hover:bg-[#7BCFD180] md:hover:bg-pink-button md:hover:shadow-2xl transition-all duration-300 ease-in-out cursor-pointer"
         >
           <div className="h-[50px] md:h-[200px] lg:h-[300px]">
             <img src={cat} className="h-full md:pb-10" />
@@ -23,7 +23,7 @@ const Categories = ({ onCategorySelect }) => {
         </div>
         <div
           onClick={() => onCategorySelect("dogs")}
-          className="bg-pink-button space-x-2 md:space-x-0 flex flex-row md:flex-col  w-[150px] h-[80px] md:w-[200px] md:h-[300px] lg:w-[300px] lg:h-[400px] justify-center items-center rounded-3xl md:rounded-lg shadow-lg hover:bg-[#7BCFD180] md:hover:bg-pink-button md:hover:shadow-2xl transition-all duration-300 ease-in-out"
+          className="bg-pink-button space-x-2 md:space-x-0 flex flex-row md:flex-col  w-[150px] h-[80px] md:w-[200px] md:h-[300px] lg:w-[300px] lg:h-[400px] justify-center items-center rounded-3xl md:rounded-lg shadow-lg hover:bg-[#7BCFD180] md:hover:bg-pink-button md:hover:shadow-2xl transition-all duration-300 ease-in-out cursor-pointer"
         >
           <div className="h-[50px] md:h-[200px] lg:h-[300px]">
             <img src={dog} className="h-full  md:pb-10" />
