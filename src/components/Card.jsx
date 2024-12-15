@@ -17,7 +17,7 @@ export default function Card(pet) {
   return (
     <div
       onClick={handleCardClick}
-      className="max-[430px]:w-[120px] max-[560px]:h-[200px] w-[190px] h-[270px] md:w-[190px] md:h-[260px] 2xl:w-[280px] 2xl:h-[400px] bg-pink-button p-2 rounded-[30px] shadow-lg hover:cursor-pointer"
+      className="max-[430px]:w-[120px] max-[560px]:h-[200px] w-[190px] h-[270px] md:w-[190px] md:h-[260px] 2xl:w-[280px] 2xl:h-[400px] bg-pink-button p-2 rounded-[30px] shadow-lg hover:cursor-pointer my-1 sm:my-3"
     >
       <div className="max-[430px]:w-[100px] max-[430px]:h-[120px] w-[175px] h-[190px] md:w-[160px] md:h-[180px] 2xl:w-[250px] 2xl:h-[270px] mx-auto">
         <img
