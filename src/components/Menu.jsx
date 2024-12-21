@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import addPet from "../assets/HomePage/AddPet.png";
 import logout from "../assets/HomePage/Logout.png";
 import user from "../assets/HomePage/User.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 // Utility function to get a cookie value
 const getCookie = (name) => {
@@ -12,15 +12,80 @@ const getCookie = (name) => {
   return null;
 };
 
+// Function to delete a cookie
+const deleteCookie = (name) => {
+  document.cookie = `${name}=; Path=/; Expires=Thu, 01 Jan 1970 00:00:01 GMT;`;
+};
+
 const Menu = () => {
   const [isOpen, setIsOpen] = useState(false); // State to control menu visibility
   const [isLoggedIn, setIsLoggedIn] = useState(false); // State to track auth_token presence
+  const [loading, setLoading] = useState(true); // State to track validation status
   const menuRef = useRef(null); // Ref to track the dropdown menu element
+  const navigate = useNavigate(); // For navigation
+
+  // Validate token
+  const validateToken = async (token) => {
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/user", {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${token}`, // Add the token in the Authorization header
+        },
+      });
+
+      if (response.ok) {
+        const userData = await response.json();
+        console.log("User data:", userData); // Log user data if needed
+        setIsLoggedIn(true); // Token is valid
+      } else {
+        console.error("Invalid token");
+        setIsLoggedIn(false); // Token is invalid
+      }
+    } catch (error) {
+      console.error("Error validating token:", error);
+      setIsLoggedIn(false); // Token validation failed
+    } finally {
+      setLoading(false); // Validation complete
+    }
+  };
+
+  // Logout functionality
+  const handleLogout = async () => {
+    const token = getCookie("auth_token");
+    if (!token) return;
+
+    try {
+      const response = await fetch("http://127.0.0.1:8000/api/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      if (response.ok) {
+        console.log("Successfully logged out");
+        deleteCookie("auth_token"); // Remove token from cookies
+        setIsLoggedIn(false); // Update state
+        navigate("/"); // Redirect to login page
+      } else {
+        console.error("Error logging out");
+      }
+    } catch (error) {
+      console.error("Error during logout:", error);
+    }
+  };
 
   useEffect(() => {
     // Check for auth_token in cookies
     const token = getCookie("auth_token");
-    setIsLoggedIn(!!token); // Update state based on token presence
+    if (token) {
+      validateToken(token); // Validate the token if found
+    } else {
+      setIsLoggedIn(false); // No token found
+      setLoading(false); // No need to validate if there's no token
+    }
   }, []);
 
   // Toggle the menu visibility
@@ -43,6 +108,10 @@ const Menu = () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
   }, []);
+
+  if (loading) {
+    return <div>Loading...</div>; // Show a loading indicator while validating
+  }
 
   return (
     <div className="relative">
@@ -96,7 +165,7 @@ const Menu = () => {
           </Link>
           {isLoggedIn ? (
             <Link
-              to="/logout"
+              onClick={handleLogout}
               className="block px-4 max-[430px]:px-1 py-2 rounded-lg hover:bg-[#7BCFD180]"
             >
               <img

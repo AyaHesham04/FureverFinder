@@ -1,17 +1,55 @@
 import male from "../assets/HomePage/Male.png";
 import female from "../assets/HomePage/Female.png";
+import deleteIcon from "../assets/HomePage/R.png";
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
-export default function Card(pet) {
+export default function Card(pet, { canDelete = false }) {
   // Add `id` to props
   const navigate = useNavigate();
-  // console.log(pet);
+  const [isDeleting, setIsDeleting] = useState(false); // State to manage loading during deletion
+
   const handleCardClick = () => {
     navigate(`/pet/${pet.id}`, {
-      // Use the `id` prop here
-      state: { pet }, // Pass data to the details page
+      state: { pet },
     });
+  };
+
+  const handleDelete = async () => {
+    try {
+      setIsDeleting(true); // Set loading state
+      const token = getCookie("auth_token"); // Assuming you have a function to get the cookie
+      console.log(token);
+      const response = await fetch("http://127.0.0.1:8000/api/user/deletepet", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Add token for authentication
+        },
+        body: JSON.stringify({
+          id: pet.id,
+          type: pet.type,
+        }),
+      });
+
+      const result = await response.json();
+
+      if (response.ok) {
+        // Handle successful delete, maybe refresh the page or update the state
+        toast.success("Pet deleted:", result);
+      } else {
+        // Handle errors (e.g., validation or backend errors)
+        toast.error("Delete failed:", result);
+      }
+    } catch (error) {
+      toast.error("Error deleting pet:", error);
+
+      console.error();
+    } finally {
+      setIsDeleting(false); // Reset loading state
+    }
   };
 
   return (
@@ -21,7 +59,7 @@ export default function Card(pet) {
     >
       <div className="max-[430px]:w-[100px] max-[430px]:h-[120px] w-[175px] h-[190px] md:w-[160px] md:h-[180px] 2xl:w-[250px] 2xl:h-[270px] mx-auto">
         <img
-          src={pet.images[0].url}
+          src={pet.images[0]}
           alt={pet.name}
           className="w-full h-full object-cover rounded-[20px]"
         />
@@ -33,7 +71,16 @@ export default function Card(pet) {
         </h2>
         <div className="flex items-center">
           <div className="rounded-full bg-white max-[400px]:w-[25px] max-[430px]:w-[30px] w-[40px] md:w-[50px] 2xl:w-[80px]">
-            {pet.gender === "male" ? (
+            {pet.canDelete ? (
+              <img
+                src={deleteIcon}
+                alt="Delete icon"
+                onClick={(e) => {
+                  e.stopPropagation(); // Prevent card click from triggering
+                  handleDelete(); // Call delete function
+                }}
+              />
+            ) : pet.gender === "male" ? (
               <img src={male} alt="Male icon" />
             ) : (
               <img src={female} alt="Female icon" />
@@ -43,4 +90,10 @@ export default function Card(pet) {
       </div>
     </div>
   );
+}
+function getCookie(name) {
+  const value = `; ${document.cookie}`;
+  const parts = value.split(`; ${name}=`);
+  if (parts.length === 2) return parts.pop().split(";").shift();
+  return null;
 }

@@ -2,37 +2,37 @@ import React, { useState, useEffect, useRef } from "react";
 import pet from "../../assets/HomePage/dogBlack.png";
 import gender from "../../assets/HomePage/gender.png";
 import age from "../../assets/HomePage/age.png";
+import axios from "axios";
 
 import dog from "../../assets/HomePage/dogGrey.png";
 import cat from "../../assets/HomePage/cat.png";
 import femaleDark from "../../assets/HomePage/femaleDark.png";
 import maleDark from "../../assets/HomePage/maleDark.png";
 import LocationPicker from "../LocationPicker";
-
+import { toast } from "react-toastify";
 
 const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
-
   const [selectedPet, setSelectedPet] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedAge, setSelectedAge] = useState("");
+  const [search, setSearch] = useState("");
   const [image, setImage] = useState(null);
+  const [file, setFile] = useState(null);
   const [location, setLocation] = useState("");
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
-
   const fetchPets = async () => {
     try {
-      const response = await fetch(
-        "https://api-fureverfinders.amrnabih.com/api/pets/index"
-      );
-      const data = await response.json();
+      const response = await axios.post("http://127.0.0.1:8000/api/pets/index");
 
+      const data = response.data; // Axios automatically parses JSON response
+      console.log("data : ", data);
       // Map the data and send it directly to parent
       const formattedCatData = data.cats.map((cat) => ({
         id: cat.id,
         name: cat.pet_name,
         gender: cat.gender,
-        images: cat.images,
+        images: cat.images.map((image) => `data:image/jpeg;base64,${image}`), // Convert base64 to image URL
         year: cat.year,
         month: cat.month,
         address: cat.address,
@@ -41,12 +41,19 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         user_id: cat.user_id,
         created_at: cat.created_at,
         status: cat.status,
+        user: {
+          email: cat.user.email,
+          fname: cat.user.fname,
+          lname: cat.user.lname,
+          phone: cat.user.phone,
+        },
       }));
+
       const formattedDogData = data.dogs.map((dog) => ({
         id: dog.id,
         name: dog.pet_name,
         gender: dog.gender,
-        images: dog.images,
+        images: dog.images.map((image) => `data:image/jpeg;base64,${image}`), // Convert base64 to image URL
         year: dog.year,
         month: dog.month,
         address: dog.address,
@@ -55,6 +62,12 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         user_id: dog.user_id,
         created_at: dog.created_at,
         status: dog.status,
+        user: {
+          email: dog.user.email,
+          fname: dog.user.fname,
+          lname: dog.user.lname,
+          phone: dog.user.phone,
+        },
       }));
 
       // Pass data to parent handlers
@@ -67,9 +80,105 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       onUpdateLoading(false);
     }
   };
+
   useEffect(() => {
     fetchPets();
   }, []);
+  const handleSearch = async () => {
+    onUpdateLoading(true);
+    try {
+      const params = new URLSearchParams();
+      params.append("full", true);
+      if (selectedPet !== "") {
+        params.append("pet_type", selectedPet.value);
+      }
+      if (search !== "") {
+        params.append("search", search);
+      }
+
+      if (selectedGender !== "") {
+        params.append("gender", selectedGender.value);
+      }
+
+      if (selectedAge !== "") {
+        params.append("min_age", selectedAge.value);
+      }
+
+      // Prepare the FormData
+      const formData = new FormData();
+
+      // Append image if it exists
+      if (image) {
+        formData.append("image", file); // Use the image file here
+      }
+
+      const queryString = params.toString(); // Convert params to query string
+      const apiUrl = `http://127.0.0.1:8000/api/pets/index?${queryString}`;
+
+      // Make the POST request with FormData
+      const response = await axios.post(
+        apiUrl,
+        image ? formData : null,
+        image
+          ? {
+              headers: {
+                "Content-Type": "multipart/form-data", // Ensure the correct content type is set for file uploads
+              },
+            }
+          : null
+      );
+
+      // Directly access response.data
+      const data = response.data;
+
+      const formattedCatData = Array.isArray(data.cats)
+        ? data.cats.map((cat) => ({
+            id: cat.id,
+            name: cat.pet_name,
+            gender: cat.gender,
+            images: cat.images.map(
+              (image) => `data:image/jpeg;base64,${image}`
+            ), // Convert base64 to image URL
+            year: cat.year,
+            month: cat.month,
+            address: cat.address,
+            weight: cat.weight,
+            description: cat.description,
+            user_id: cat.user_id,
+            created_at: cat.created_at,
+            status: cat.status,
+          }))
+        : [];
+
+      const formattedDogData = Array.isArray(data.dogs)
+        ? data.dogs.map((dog) => ({
+            id: dog.id,
+            name: dog.pet_name,
+            gender: dog.gender,
+            images: dog.images.map(
+              (image) => `data:image/jpeg;base64,${image}`
+            ), // Convert base64 to image URL
+            year: dog.year,
+            month: dog.month,
+            address: dog.address,
+            weight: dog.weight,
+            description: dog.description,
+            user_id: dog.user_id,
+            created_at: dog.created_at,
+            status: dog.status,
+          }))
+        : [];
+
+      // Pass data to parent handlers
+      onUpdateCatData(formattedCatData);
+      onUpdateDogData(formattedDogData);
+    } catch (error) {
+      console.error("Error fetching pets data:", error);
+    } finally {
+      // Update loading state in the parent
+      onUpdateLoading(false);
+    }
+  };
 
   const petOptions = [
     { value: "dog", label: "Dog", icon: dog },
@@ -98,20 +207,28 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
     });
   }
 
-
   const petDropdownRef = useRef(null);
   const genderDropdownRef = useRef(null);
   const ageDropdownRef = useRef(null);
 
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (petDropdownRef.current && !petDropdownRef.current.contains(event.target)) {
+      if (
+        petDropdownRef.current &&
+        !petDropdownRef.current.contains(event.target)
+      ) {
         setIsPetOpen(false);
       }
-      if (genderDropdownRef.current && !genderDropdownRef.current.contains(event.target)) {
+      if (
+        genderDropdownRef.current &&
+        !genderDropdownRef.current.contains(event.target)
+      ) {
         setIsGenderOpen(false);
       }
-      if (ageDropdownRef.current && !ageDropdownRef.current.contains(event.target)) {
+      if (
+        ageDropdownRef.current &&
+        !ageDropdownRef.current.contains(event.target)
+      ) {
         setIsAgeOpen(false);
       }
     };
@@ -138,6 +255,10 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
     // console.log("Selected Pet:", option);
   };
 
+  const handleSearchChange = (event) => {
+    setSearch(event.target.value); // Update the state with the input value
+  };
+
   const handleSelectionGender = (option) => {
     setSelectedGender(option);
     setIsGenderOpen(false);
@@ -150,25 +271,23 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
     // console.log("selectedAge",selectedAge);
   };
 
-  const fileInputRef = useRef(null);  // Create a reference for the file input
+  const fileInputRef = useRef(null); // Create a reference for the file input
 
   const handleImageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setImage(reader.result); // Set the image as a data URL
-      };
-      reader.readAsDataURL(file);
+      setImage(URL.createObjectURL(file)); // Set the image as a data URL
+      setFile(file); // Set the image as a data URL
     }
   };
 
   const handleChangeImageClick = () => {
-    fileInputRef.current.click();  // Programmatically trigger the file input click
+    fileInputRef.current.click(); // Programmatically trigger the file input click
   };
 
   const handleImageRemove = () => {
     setImage(null);
+    setFile(null);
   };
 
   const handleLocationClick = (e) => {
@@ -248,8 +367,9 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isPetOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${
+                  isPetOpen ? "rotate-180" : "rotate-0"
+                }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -297,8 +417,9 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${isGenderOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${
+                  isGenderOpen ? "rotate-180" : "rotate-0"
+                }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -346,8 +467,9 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isAgeOpen ? "rotate-180" : "rotate-0"
-                  }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${
+                  isAgeOpen ? "rotate-180" : "rotate-0"
+                }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -379,7 +501,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           {/*Image*/}
           <div className="relative">
             <input
-              ref={fileInputRef}  // Attach the ref to the input element
+              ref={fileInputRef} // Attach the ref to the input element
               type="file"
               accept="image/*"
               onChange={handleImageChange}
@@ -395,7 +517,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
                   />
                   <button
                     className="text-start text-[#7bd0d1] hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
-                    onClick={handleChangeImageClick}  // Trigger the file input click
+                    onClick={handleChangeImageClick} // Trigger the file input click
                   >
                     Change
                   </button>
@@ -414,8 +536,16 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
                     className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-4 max-[430px]:h-4 inline-block mr-2 text-[#424242]"
                     viewBox="0 0 24 24"
                   >
-                    <path fill-rule="evenodd" clip-rule="evenodd" d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z" fill="#0F0F0F" />
-                    <path d="M4.80665 17.5211L9.1221 9.60947C9.50112 8.91461 10.4989 8.91461 10.8779 9.60947L14.0465 15.4186L15.1318 13.5194C15.5157 12.8476 16.4843 12.8476 16.8682 13.5194L19.1451 17.5039C19.526 18.1705 19.0446 19 18.2768 19H5.68454C4.92548 19 4.44317 18.1875 4.80665 17.5211Z" fill="#0F0F0F" />
+                    <path
+                      fill-rule="evenodd"
+                      clip-rule="evenodd"
+                      d="M23 4C23 2.34315 21.6569 1 20 1H4C2.34315 1 1 2.34315 1 4V20C1 21.6569 2.34315 23 4 23H20C21.6569 23 23 21.6569 23 20V4ZM21 4C21 3.44772 20.5523 3 20 3H4C3.44772 3 3 3.44772 3 4V20C3 20.5523 3.44772 21 4 21H20C20.5523 21 21 20.5523 21 20V4Z"
+                      fill="#0F0F0F"
+                    />
+                    <path
+                      d="M4.80665 17.5211L9.1221 9.60947C9.50112 8.91461 10.4989 8.91461 10.8779 9.60947L14.0465 15.4186L15.1318 13.5194C15.5157 12.8476 16.4843 12.8476 16.8682 13.5194L19.1451 17.5039C19.526 18.1705 19.0446 19 18.2768 19H5.68454C4.92548 19 4.44317 18.1875 4.80665 17.5211Z"
+                      fill="#0F0F0F"
+                    />
                     <path d="M18 8C18 9.10457 17.1046 10 16 10C14.8954 10 14 9.10457 14 8C14 6.89543 14.8954 6 16 6C17.1046 6 18 6.89543 18 8Z" />
                   </svg>
                 </span>
@@ -470,11 +600,16 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           </div>
           <input
             type="text"
+            value={search} // Set the value of the input to the state
+            onChange={handleSearchChange}
             placeholder="Search..."
             className="text-[#4242425C] border rounded p-1 font-[400] bg-[#F5F5F5] m-1"
           />
           <div className="bg-pink-button border border-[rgba(95,91,91,0.3)] hover:bg-[#7BCFD180] text-white font-[700] w-1/2 inline-block rounded-lg p-2 max-[430px]:p-1 max-[430px]:w-full text-center shadow-md">
-            <button className="flex justify-center items-center w-fit">
+            <button
+              className="flex justify-center items-center w-fit"
+              onClick={handleSearch}
+            >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
                 viewBox="0 0 24 24"
@@ -497,5 +632,3 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
 };
 
 export default FilterBar;
-
-

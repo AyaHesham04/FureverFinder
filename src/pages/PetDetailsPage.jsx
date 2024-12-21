@@ -85,7 +85,7 @@ const PetDetails = (state) => {
                 Owner by:
               </p>
               <p className="font-poppins font-[500] 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px] text-[#5F5B5B]">
-                Hedy El Fnana
+                {petData.user?.fname} {petData.user?.lname}
               </p>
 
               <p className="mt-3 text-[#5F5B5BB2] font-poppins font-[500] 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px]">

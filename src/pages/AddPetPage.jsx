@@ -79,7 +79,8 @@ const AddPet = () => {
       console.log(token);
       // API request
       const response = await axios.post(
-        "https://api-fureverfinders.amrnabih.com/api/pets/store",
+        "http://127.0.0.1:8000/api/pets/store",
+        // "https://api-fureverfinders.amrnabih.com/api/pets/store",
         data,
         {
           headers: {

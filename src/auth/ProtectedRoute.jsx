@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children, redirectTo = "/login" }) => {
     }
 
     axios
-      .get("https://api-fureverfinders.amrnabih.com/api/user/show", {
+      .get("http://127.0.0.1:8000/api/user/show", {
         headers: { Authorization: `Bearer ${authToken}` },
       })
       .then((response) => {

@@ -21,7 +21,7 @@ const MediaSlider = ({ mediaList }) => {
         {
           // mediaList[currentIndex].type === "image" && (
           <img
-            src={mediaList[currentIndex].url}
+            src={mediaList[currentIndex]}
             alt={`Slide ${currentIndex}`}
             className="w-full h-full"
           />

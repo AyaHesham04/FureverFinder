@@ -7,24 +7,6 @@ import temp2 from "../assets/TemporaryImages/cat2.jpg";
 import temp3 from "../assets/TemporaryImages/cat3.jpg";
 import BackButton from "../components/BackButton";
 
-const catData = [
-  {
-    name: "Ginger",
-    gender: "Female",
-    imageSrc: temp1,
-  },
-  {
-    name: "Whiskers",
-    gender: "Male",
-    imageSrc: temp2,
-  },
-  {
-    name: "Luna",
-    gender: "Female",
-    imageSrc: temp3,
-  },
-];
-
 function ProfilePage({ userData }) {
   const [fullName, setFullName] = useState("");
   const [catData, setCatData] = useState([]);
@@ -44,7 +26,7 @@ function ProfilePage({ userData }) {
         id: cat.id,
         name: cat.pet_name,
         gender: cat.gender,
-        images: cat.images,
+        images: cat.images.map((image) => `data:image/jpeg;base64,${image}`),
         year: cat.year,
         month: cat.month,
         address: cat.address,
@@ -53,6 +35,12 @@ function ProfilePage({ userData }) {
         user_id: cat.user_id,
         created_at: cat.created_at,
         status: cat.status,
+        user: {
+          email: userData.email,
+          fname: userData.fname,
+          lname: userData.lname,
+          phone: userData.phone,
+        },
       }))
     );
     setDogData(
@@ -60,7 +48,7 @@ function ProfilePage({ userData }) {
         id: dog.id,
         name: dog.pet_name,
         gender: dog.gender,
-        images: dog.images,
+        images: dog.images.map((image) => `data:image/jpeg;base64,${image}`),
         year: dog.year,
         month: dog.month,
         address: dog.address,
@@ -69,6 +57,12 @@ function ProfilePage({ userData }) {
         user_id: dog.user_id,
         created_at: dog.created_at,
         status: dog.status,
+        user: {
+          email: userData.email,
+          fname: userData.fname,
+          lname: userData.lname,
+          phone: userData.phone,
+        },
       }))
     );
   }, [userData]);
@@ -86,10 +80,10 @@ function ProfilePage({ userData }) {
           <div className="w-full flex justify-center items-center py-10">
             <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
               {catData.map((cat, index) => (
-                <Card key={index} {...cat} />
+                <Card key={index} {...cat} canDelete={true} type="cat" />
               ))}
               {dogData.map((cat, index) => (
-                <Card key={index} {...cat} />
+                <Card key={index} {...cat} canDelete={true} type="dog" />
               ))}
             </div>
           </div>
