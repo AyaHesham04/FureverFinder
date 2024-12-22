@@ -10,8 +10,6 @@ import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-// import "leaflet/dist/leaflet.css";
-import MapComponent from "./components/MapComponent";
 
 function App() {
   return (
@@ -19,7 +17,6 @@ function App() {
       <Router>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/MapComponent" element={<MapComponent />} />
           <Route path="/signup" element={<Signup />} />
           <Route path="/login" element={<Login />} />
           <Route path="/start" element={<StartPage />} />

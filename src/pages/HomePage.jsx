@@ -4,7 +4,6 @@ import FilterBar from "../components/HomePage/FilterBar";
 import Categories from "../components/HomePage/Categories";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
-import MapComponent from "../components/MapComponent";
 
 const HomePage = () => {
   const [catData, setCatData] = useState([]);
