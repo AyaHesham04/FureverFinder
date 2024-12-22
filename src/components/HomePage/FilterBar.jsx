@@ -310,13 +310,44 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
     };
   }, [isLocationModalOpen]);
 
-  const handleUseCurrentLocation = () => {
+  const handleUseCurrentLocation = async () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
-        (position) => {
+        async (position) => {
           const { latitude, longitude } = position.coords;
-          setLocation(`Lat: ${latitude}, Long: ${longitude}`);
-          setIsLocationModalOpen(false);
+
+          try {
+            // OpenCage API call with your API key
+            const response = await fetch(
+              `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=907eecc4dc364380ad65c07d8f1233ba`
+            );
+
+            if (!response.ok)
+              throw new Error("Failed to fetch location details.");
+
+            const data = await response.json();
+
+            if (data.results && data.results.length > 0) {
+              const components = data.results[0].components;
+
+              const country = components.country || "Unknown Country";
+              const city =
+                components.city ||
+                components.town ||
+                components.village ||
+                "Unknown City";
+
+              // Set the location in your state or variable
+              setLocation(`City: ${city}, Country: ${country}`);
+            } else {
+              alert("Unable to retrieve the location details.");
+            }
+
+            setIsLocationModalOpen(false);
+          } catch (error) {
+            console.error(error);
+            alert("Unable to retrieve location details.");
+          }
         },
         (error) => {
           console.error(error);
