@@ -10,7 +10,6 @@ const HomePage = () => {
   const [dogData, setDogData] = useState([]);
   const [loading, setLoading] = useState(true);
   const handleLoading = (newLoadingState) => {
-    // console.log("loading", loading);
     setLoading(newLoadingState);
   };
   const handleCatDataUpdate = (newCatData) => {

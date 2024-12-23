@@ -51,7 +51,6 @@ const AddPet = () => {
     setErrors({});
 
     try {
-      console.log("Selected Files: ", selectedFiles);
       const data = new FormData();
 
       // Append images to FormData
@@ -71,15 +70,8 @@ const AddPet = () => {
         data.append(key, value);
       });
 
-      // Debug: Log FormData content
-      console.log("FormData entries:");
-      for (const [key, value] of data.entries()) {
-        console.log(`${key}:`, value);
-      }
-
       // Get token from cookies
       const token = Cookies.get("auth_token");
-      console.log(token);
       // API request
       const response = await axios.post(
         "http://127.0.0.1:8000/api/pets/store",
@@ -94,7 +86,6 @@ const AddPet = () => {
       );
 
       // Handle success
-      console.log("Response:", response.data);
       toast.success("Pet added successfully!");
       navigate("/");
     } catch (error) {

@@ -21,7 +21,6 @@ export default function Card(pet, { canDelete = false }) {
     try {
       setIsDeleting(true); // Set loading state
       const token = getCookie("auth_token"); // Assuming you have a function to get the cookie
-      console.log(token);
       const response = await fetch("http://127.0.0.1:8000/api/user/deletepet", {
         method: "DELETE",
         headers: {

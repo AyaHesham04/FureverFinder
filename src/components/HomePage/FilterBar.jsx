@@ -28,7 +28,6 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       const response = await axios.post("http://127.0.0.1:8000/api/pets/index");
 
       const data = response.data; // Axios automatically parses JSON response
-      console.log("data : ", data);
       // Map the data and send it directly to parent
       const formattedCatData = data.cats.map((cat) => ({
         id: cat.id,
@@ -73,7 +72,6 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           phone: dog.user.phone,
         },
       }));
-      console.log("formattedCatData : ", formattedCatData);
 
       // Pass data to parent handlers
       onUpdateCatData(formattedCatData.slice(0, 3));
@@ -275,7 +273,6 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   const handleSelectionPet = (option) => {
     setSelectedPet(option);
     setIsPetOpen(false);
-    // console.log("Selected Pet:", option);
   };
 
   const handleSearchChange = (event) => {
@@ -285,13 +282,11 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   const handleSelectionGender = (option) => {
     setSelectedGender(option);
     setIsGenderOpen(false);
-    // console.log("Selected Gender:", option);
   };
 
   const handleSelectionAge = (value) => {
     setSelectedAge(value);
     setIsAgeOpen(false);
-    // console.log("selectedAge",selectedAge);
   };
 
   const fileInputRef = useRef(null); // Create a reference for the file input

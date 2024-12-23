@@ -15,7 +15,6 @@ function ProfilePage({ userData }) {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
   useEffect(() => {
-    console.log("user :", userData);
     if (userData?.user?.fname && userData?.user?.lname) {
       setFullName(
         `${capitalize(userData.user.fname)} ${capitalize(userData.user.lname)}`
@@ -29,7 +28,8 @@ function ProfilePage({ userData }) {
         images: cat.images.map((image) => `data:image/jpeg;base64,${image}`),
         year: cat.year,
         month: cat.month,
-        address: cat.address,
+        longitude: cat.address.coordinates[0],
+        latitude: cat.address.coordinates[1],
         weight: cat.weight,
         description: cat.description,
         user_id: cat.user_id,
@@ -51,7 +51,8 @@ function ProfilePage({ userData }) {
         images: dog.images.map((image) => `data:image/jpeg;base64,${image}`),
         year: dog.year,
         month: dog.month,
-        address: dog.address,
+        longitude: dog.address.coordinates[0],
+        latitude: dog.address.coordinates[1],
         weight: dog.weight,
         description: dog.description,
         user_id: dog.user_id,

@@ -2,7 +2,6 @@ import React, { useState } from "react";
 
 const MediaSlider = ({ mediaList }) => {
   const [currentIndex, setCurrentIndex] = useState(0);
-  console.log(mediaList);
   const goToNext = () => {
     setCurrentIndex((prevIndex) =>
       prevIndex === mediaList.length - 1 ? 0 : prevIndex + 1

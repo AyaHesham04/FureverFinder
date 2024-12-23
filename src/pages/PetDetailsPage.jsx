@@ -7,6 +7,7 @@ import owner from "../assets/TemporaryImages/customer.jpg";
 import BackButton from "../components/BackButton";
 import MediaSlider from "../components/MediaPreviewList";
 import { useLocation } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const PetDetails = (state) => {
   const location = useLocation();
@@ -39,11 +40,13 @@ const PetDetails = (state) => {
           // Set the location in your state or variable
           setGeo(`City: ${city}, Country: ${country}`);
         } else {
-          alert("Unable to retrieve the location details.");
+          toast.error("Unable to retrieve the location details.");
+
         }
       } catch (error) {
         console.error(error);
-        alert("Unable to retrieve location details.");
+        toast.error("Unable to retrieve location details.");
+
       }
     };
 
@@ -51,7 +54,6 @@ const PetDetails = (state) => {
     fetchLocationData();
   }, [petData.latitude, petData.longitude]); // Dependency array with petData
 
-  console.log("pet :", petData);
   const mediaData = [
     { url: "https://via.placeholder.com/300", type: "image" },
     { url: "https://www.w3schools.com/html/mov_bbb.mp4", type: "video" },

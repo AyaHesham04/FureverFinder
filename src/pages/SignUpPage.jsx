@@ -56,7 +56,6 @@ const Signup = () => {
           typeof error.response.data === "string"
             ? JSON.parse(error.response.data)
             : error.response.data;
-        console.log(parsedData);
         // Set the parsed data as errors
         setErrors(parsedData.errors || parsedData || {});
       } else {

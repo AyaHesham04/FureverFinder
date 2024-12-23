@@ -36,7 +36,6 @@ const Menu = () => {
 
       if (response.ok) {
         const userData = await response.json();
-        console.log("User data:", userData); // Log user data if needed
         setIsLoggedIn(true); // Token is valid
       } else {
         console.error("Invalid token");
@@ -65,7 +64,6 @@ const Menu = () => {
       });
 
       if (response.ok) {
-        console.log("Successfully logged out");
         deleteCookie("auth_token"); // Remove token from cookies
         setIsLoggedIn(false); // Update state
         navigate("/"); // Redirect to login page
