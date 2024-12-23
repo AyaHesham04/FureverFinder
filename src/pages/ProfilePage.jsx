@@ -78,7 +78,7 @@ function ProfilePage({ userData }) {
           <h1 className="text-[#5F5B5B] font-poppins font-[500] text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px]">
             {fullName || "Loading..."}
           </h1>
-          <div className="w-full flex justify-center items-center py-10">
+          <div className="w-full flex justify-center py-10 overflow-y-auto scrollbar-hide">
             <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-2 md:grid-cols-2 lg:sm:grid-cols-3 max-[430px]:gap-6 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
               {catData.map((cat, index) => (
                 <Card key={index} {...cat} canDelete={true} type="cat" />
@@ -88,6 +88,7 @@ function ProfilePage({ userData }) {
               ))}
             </div>
           </div>
+          <div className="py-5"></div>
         </div>
       </div>
     </div>

@@ -22,9 +22,15 @@ const HomePage = () => {
   };
 
   const [selectedCategory, setSelectedCategory] = useState("");
+  const [showCategories, setShowCategories] = useState(true);
 
   const handleCategorySelect = (category) => {
     setSelectedCategory(category);
+  };
+
+
+  const handleFilterStateChange = (filtersEmpty) => {
+    setShowCategories(filtersEmpty);
   };
 
   return (
@@ -34,8 +40,11 @@ const HomePage = () => {
         onUpdateCatData={handleCatDataUpdate}
         onUpdateDogData={handleDogDataUpdate}
         onUpdateLoading={handleLoading}
+        onFilterStateChange={handleFilterStateChange}
       />
-      <Categories onCategorySelect={handleCategorySelect} />
+      {showCategories && (
+        <Categories onCategorySelect={handleCategorySelect} />
+      )}
 
       {/* Cats Section */}
       {(selectedCategory === "cats" || selectedCategory === "") && (

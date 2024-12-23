@@ -11,7 +11,7 @@ import maleDark from "../../assets/HomePage/maleDark.png";
 import LocationPicker from "../LocationPicker";
 import { toast } from "react-toastify";
 
-const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
+const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading, onFilterStateChange }) => {
   const [selectedPet, setSelectedPet] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedAge, setSelectedAge] = useState("");
@@ -22,6 +22,22 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   const [longitude, setLongitude] = useState("");
   const [location, setLocation] = useState("");
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+
+  const areAllFiltersEmpty = () => {
+    return (
+      !selectedPet &&
+      !selectedGender &&
+      !selectedAge &&
+      !image &&
+      !location &&
+      !search
+    );
+  };
+
+  useEffect(() => {
+    onFilterStateChange(areAllFiltersEmpty());
+  }, [selectedPet, selectedGender, selectedAge, image, location, search]);
+
 
   const fetchPets = async () => {
     try {
@@ -199,6 +215,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       // Update loading state in the parent
       onUpdateLoading(false);
     }
+
+    // onSearch();
   };
 
   const petOptions = [
@@ -405,21 +423,22 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         <div className="w-full font-inter font-[700] grid grid-cols-3 gap-3 max-[430px]:gap-2 p-3 text-black">
           <div
             ref={petDropdownRef}
-            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
+            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-start bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
           >
             <img
               src={selectedPet.icon || pet}
+              onClick={togglePetDropdown}
               alt="Pet"
-              className="mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
+              className="cursor-pointer mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
             />
-            <span>{selectedPet?.label || "Pet"}</span>
+            <span onClick={togglePetDropdown} className="cursor-pointer">{selectedPet?.label || "Pet"}</span>
             <div
               onClick={togglePetDropdown}
               className="transition-transform mx-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isPetOpen ? "rotate-180" : "rotate-0"
+                className={`cursor-pointer 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isPetOpen ? "rotate-180" : "rotate-0"
                   }`}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -451,24 +470,34 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
                 ))}
               </ul>
             )}
+            {/* Clear Button */}
+            {selectedPet && (
+              <button
+                onClick={() => setSelectedPet("")}
+                className="mt-2 text-red-500 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px] hover:underline"
+              >
+                Clear
+              </button>
+            )}
           </div>
           <div
             ref={genderDropdownRef}
-            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
+            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-start bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
           >
             <img
               src={selectedGender.icon || gender}
+              onClick={toggleGenderDropdown}
               alt="Gender"
-              className="mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
+              className="cursor-pointer mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
             />
-            <span>{selectedGender?.label || "Gender"}</span>
+            <span onClick={toggleGenderDropdown} className="cursor-pointer">{selectedGender?.label || "Gender"}</span>
             <div
               onClick={toggleGenderDropdown}
               className="transition-transform mx-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${isGenderOpen ? "rotate-180" : "rotate-0"
+                className={`cursor-pointer 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${isGenderOpen ? "rotate-180" : "rotate-0"
                   }`}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -500,24 +529,34 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
                 ))}
               </ul>
             )}
+            {/* Clear Button */}
+            {selectedGender && (
+              <button
+                onClick={() => setSelectedGender("")}
+                className="mt-2 text-red-500 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px] hover:underline"
+              >
+                Clear
+              </button>
+            )}
           </div>
           <div
             ref={ageDropdownRef}
-            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-center bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
+            className="relative grid grid-cols-[0.5fr_1fr_0.5fr] mx-auto w-full justify-center items-start bg-[#E9E9E9] rounded-lg p-2 max-[430px]:p-1 text-center"
           >
             <img
+              onClick={toggleAgeDropdown}
               src={age}
               alt="Age"
-              className="mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
+              className="cursor-pointer mx-auto 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3"
             />
-            <span>{selectedAge.label || "Age"}</span>
+            <span onClick={toggleAgeDropdown} className="cursor-pointer">{selectedAge.label || "Age"}</span>
             <div
               onClick={toggleAgeDropdown}
               className="transition-transform mx-auto"
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isAgeOpen ? "rotate-180" : "rotate-0"
+                className={`cursor-pointer 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isAgeOpen ? "rotate-180" : "rotate-0"
                   }`}
                 fill="none"
                 viewBox="0 0 24 24"
@@ -543,6 +582,15 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
                   </li>
                 ))}
               </ul>
+            )}
+            {/* Clear Button */}
+            {selectedAge && (
+              <button
+                onClick={() => setSelectedAge("")}
+                className="mt-2 text-red-500 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px] hover:underline"
+              >
+                Clear
+              </button>
             )}
           </div>
         </div>
@@ -629,13 +677,6 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             {location && (
               <div className="w-full">
                 <span className="text-[#424242] w-full">{location}</span>
-                <button
-                  className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
-                  // onClick={handleChangeLocation}
-                  onClick={handleChangeLocation}
-                >
-                  Change
-                </button>
                 <button
                   className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
                   // onClick={handleChangeLocation}

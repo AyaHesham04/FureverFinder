@@ -287,7 +287,7 @@ const AddPet = () => {
                   name="gender"
                   value={formData.gender}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.gender
+                  className={`cursor-pointer w-4/5 lg:w-full px-3 py-2 border ${errors.gender
                     ? "border-red-500"
                     : "border-[rgba(95,91,91,0.3)]"
                     } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
@@ -311,7 +311,7 @@ const AddPet = () => {
                   name="type"
                   value={formData.type}
                   onChange={handleChange}
-                  className={`w-4/5 lg:w-full px-3 py-2 border ${errors.type
+                  className={`cursor-pointer w-4/5 lg:w-full px-3 py-2 border ${errors.type
                     ? "border-red-500"
                     : "border-[rgba(95,91,91,0.3)]"
                     } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
@@ -403,16 +403,19 @@ const AddPet = () => {
             <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
               {/* <div className="relative flex items-center"> */}
               {!location && (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 24 24"
-                  className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-4 max-[430px]:h-4 inline-block text-[#424242] hover:text-[#7BCFD180] rounded cursor-pointer"
-                  fill="currentColor"
-                  // onClick={handleLocationClick}
-                  onClick={handleUseCurrentLocation}
-                >
-                  <path d="M12 2C8.13 2 5 5.13 5 9c0 4.93 7 13 7 13s7-8.07 7-13c0-3.87-3.13-7-7-7zm0 10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
-                </svg>
+                <div className="text-[#424242] cursor-pointer group hover:text-[#7BCFD180]">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    viewBox="0 0 24 24"
+                    className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-4 max-[430px]:h-4 inline-block text-[#424242] group-hover:text-[#7BCFD180] rounded"
+                    fill="currentColor"
+                    // onClick={handleLocationClick}
+                    onClick={handleUseCurrentLocation}
+                  >
+                    <path d="M12 2C8.13 2 5 5.13 5 9c0 4.93 7 13 7 13s7-8.07 7-13c0-3.87-3.13-7-7-7zm0 10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
+                  </svg>
+                  <span className="group-hover:text-[#7BCFD180] ml-1" onClick={handleUseCurrentLocation}>Add Your location</span>
+                </div>
               )}
               {/* {isLocationModalOpen && (
               <div className="location-modal absolute top-full mt-2 bg-white rounded-lg shadow-md w-full">
@@ -428,14 +431,7 @@ const AddPet = () => {
                 <div className="w-full">
                   <span className="text-[#424242] w-full">{location}</span>
                   <button
-                    className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
-                    // onClick={handleChangeLocation}
-                    onClick={handleChangeLocation}
-                  >
-                    Change
-                  </button>
-                  <button
-                    className="text-start text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
+                    className="text-center text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
                     // onClick={handleChangeLocation}
                     onClick={handleChangeLocation}
                   >
@@ -448,7 +444,7 @@ const AddPet = () => {
             </div>
             {/* Status (Radio Buttons) */}
             <div className="flex justify-center items-center space-x-20 mb-4">
-              <label className="flex text-sm max-[430px]:text-xs lg:text-md font-inter">
+              <label className="cursor-pointer flex text-sm max-[430px]:text-xs lg:text-md font-inter">
                 <input
                   type="radio"
                   name="status"
@@ -459,7 +455,7 @@ const AddPet = () => {
                 />
                 Pairing
               </label>
-              <label className="flex text-sm max-[430px]:text-xs lg:text-md font-inter">
+              <label className="cursor-pointer flex text-sm max-[430px]:text-xs lg:text-md font-inter">
                 <input
                   type="radio"
                   name="status"

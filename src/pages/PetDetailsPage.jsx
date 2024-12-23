@@ -54,6 +54,16 @@ const PetDetails = (state) => {
     fetchLocationData();
   }, [petData.latitude, petData.longitude]); // Dependency array with petData
 
+  const [isPhoneOpen, setIsPhoneOpen] = useState(false);
+
+  const openPhoneModal = () => {
+    setIsPhoneOpen(true);
+  };
+
+  const closePhoneModal = () => {
+    setIsPhoneOpen(false);
+  };
+
   const mediaData = [
     { url: "https://via.placeholder.com/300", type: "image" },
     { url: "https://www.w3schools.com/html/mov_bbb.mp4", type: "video" },
@@ -61,14 +71,15 @@ const PetDetails = (state) => {
     { url: "https://www.w3schools.com/html/movie.mp4", type: "video" },
   ];
   return (
-    <div className="relative w-screen h-screen overflow-">
+    <div className="relative w-screen h-screen">
       <BackButton></BackButton>
-      <img src={background} alt="Background" className="w-full h-full" />
-      <div className="absolute top-0 w-full h-full flex flex-col 2xl:mt-24 xl:mt-16 lg:mt-16 md:mt-16 sm:mt-16 mt-10 items-center">
+      <img src={background} alt="Background" className="w-full min-h-screen" />
+      <div className="absolute top-0 w-full flex flex-col 2xl:mt-24 xl:mt-16 lg:mt-16 md:mt-9 sm:mt-16 mt-10 items-center">
         <div className="rounded-lg border-[0.94px] border-[#F5F5F5] bg-[#FFE5E6] shadow-[0_4px_4px_rgba(0,0,0,0.2)] flex items-center justify-center 2xl:p-10 2xl:pb-4 xl:p-8 xl:pb-4 lg:p-7 lg:pb-3 max-[430px]:p-4 max-[430px]:pb-2 p-6 pb-1 mb-2">
           <MediaSlider mediaList={petData.images} />
+          {/* <MediaSlider mediaList={mediaData} /> */}
         </div>
-        <h1 className="text-[#5F5B5B] font-poppins font-semibold max-[400px]:text-[17px] max-[430px]:text-[18px] sm:text-[24px] md:text-[25px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] md:pt-5 md:pb-2 pt-3 pb-1">
+        <h1 className="text-[#5F5B5B] font-poppins font-semibold max-[400px]:text-[17px] max-[430px]:text-[18px] sm:text-[24px] md:text-[25px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] md:pt-3 md:pb-2 pt-3 pb-1">
           {petData.name}
         </h1>
         <div className="flex items-center">
@@ -84,7 +95,7 @@ const PetDetails = (state) => {
             {geo}
           </p>
         </div>
-        <div className="w-full flex justify-center items-center py-5 md:py-8 mx-auto">
+        <div className="w-full flex justify-center items-center py-5 lg:py-6 md:py-4 mx-auto">
           <div className="grid max-[430px]:grid-cols-2 sm:grid-cols-2 lg:grid-cols-4 max-[430px]:gap-5 max-[400px]:gap-5 sm:gap-5 mx-auto justify-center items-center">
             <div className="p-3 text-center rounded-lg border-[0.94px] border-[#F5F5F5] bg-[#FFE5E6] shadow-[0_4px_4px_rgba(0,0,0,0.2)]">
               <h2 className="text-[#E6B9BA] font-poppins font-[600] 2xl:text-[21px] xl:text-[19px] lg:text-[17px] md:text-[16px] sm:text-[13px] max-[430px]:text-[11px]">
@@ -120,7 +131,7 @@ const PetDetails = (state) => {
             </div>
           </div>
         </div>
-        <div className="w-3/5 max-[430px]:w-3/4 flex justify-center items-center py-5 md:py-8 mx-auto">
+        <div className="w-3/5 max-[430px]:w-3/4 flex justify-center items-center py-5 lg:py-6 md:py-4 mx-auto">
           <div className="w-full flex items-start gap-2 sm:gap-3 p-4">
             <div className="flex-grow">
               <p className="text-[#B4AEAE] font-poppins font-[400] 2xl:text-[18px] xl:text-[16px] lg:text-[14px] md:text-[13px] sm:text-[10px] max-[430px]:text-[8px]">
@@ -136,7 +147,9 @@ const PetDetails = (state) => {
             </div>
 
             <div className="flex-shrink-0">
-              <div className="2xl:w-10 2xl:h-10 xl:w-10 xl:h-10 lg:w-10 lg:h-10 md:w-9 md:h-9 sm:w-8 sm:h-8 max-[430px]:w-7 max-[430px]:h-7 bg-[#FFE5E6] flex items-center justify-center rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]">
+              <div
+                onClick={openPhoneModal}
+                className="cursor-pointer 2xl:w-10 2xl:h-10 xl:w-10 xl:h-10 lg:w-10 lg:h-10 md:w-9 md:h-9 sm:w-8 sm:h-8 max-[430px]:w-7 max-[430px]:h-7 bg-[#FFE5E6] flex items-center justify-center rounded-full shadow-[0_4px_4px_rgba(0,0,0,0.2)]">
                 <svg
                   xmlns="http://www.w3.org/2000/svg"
                   viewBox="0 0 24 24"
@@ -147,11 +160,24 @@ const PetDetails = (state) => {
                 </svg>
               </div>
             </div>
+            {isPhoneOpen && (
+              <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
+                <div className="bg-white rounded-lg p-6 w-80">
+                  <h2 className="text-[#E6B9BA] font-bold mb-4 2xl:text-[26px] xl:text-[24px] lg:text-[22px] md:text-[21px] sm:text-[18px] max-[430px]:text-[16px]">Phone Number</h2>
+                  <p className="mb-4 2xl:text-[24px] xl:text-[22px] lg:text-[20px] md:text-[19px] sm:text-[16px] max-[430px]:text-[14px]">00000000</p>
+                  <div className="flex justify-end">
+                    <button
+                      onClick={closePhoneModal}
+                      className="bg-red-500 2xl:text-[21px] xl:text-[19px] lg:text-[17px] md:text-[16px] sm:text-[13px] max-[430px]:text-[11px] text-white p-1.5 rounded hover:bg-red-600"
+                    >
+                      Cancel
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
           </div>
         </div>
-        <button className="w-2/5 mx-auto bg-pink-button text-[#5F5B5B] my-4 md:my-8 py-2 rounded-lg hover:rounded-full font-poppins font-semibold 2xl:text-[21px] xl:text-[19px] lg:text-[17px] md:text-[16px] sm:text-[13px] max-[430px]:text-[11px] shadow-lg border border-[rgba(95,91,91,0.3)]">
-          Adopt Me/Pair Me
-        </button>
       </div>
     </div>
   );
