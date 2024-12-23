@@ -156,10 +156,10 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           created_at: cat.created_at,
           status: cat.status,
           user: {
-            email: cat.user.email,
-            fname: cat.user.fname,
-            lname: cat.user.lname,
-            phone: cat.user.phone,
+            email: cat.user?.email,
+            fname: cat.user?.fname,
+            lname: cat.user?.lname,
+            phone: cat.user?.phone,
           },
         }))
         : [];
@@ -182,10 +182,10 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           created_at: dog.created_at,
           status: dog.status,
           user: {
-            email: dog.user.email,
-            fname: dog.user.fname,
-            lname: dog.user.lname,
-            phone: dog.user.phone,
+            email: dog.user?.email,
+            fname: dog.user?.fname,
+            lname: dog.user?.lname,
+            phone: dog.user?.phone,
           },
         }))
         : [];
