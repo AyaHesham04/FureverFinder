@@ -19,7 +19,7 @@ const PetDetails = (state) => {
       try {
         // OpenCage API call with your API key
         const response = await fetch(
-          // `https://api.opencagedata.com/geocode/v1/json?q=${petData.latitude}+${petData.longitude}&key=907eecc4dc364380ad65c07d8f1233ba`
+          `https://api.opencagedata.com/geocode/v1/json?q=${petData.latitude}+${petData.longitude}&key=907eecc4dc364380ad65c07d8f1233ba`
         );
 
         if (!response.ok)

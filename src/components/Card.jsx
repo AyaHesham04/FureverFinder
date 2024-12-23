@@ -38,6 +38,7 @@ export default function Card(pet, { canDelete = false }) {
       if (response.ok) {
         // Handle successful delete, maybe refresh the page or update the state
         toast.success("Pet deleted:", result);
+        navigate("/profile");
       } else {
         // Handle errors (e.g., validation or backend errors)
         toast.error("Delete failed:", result);

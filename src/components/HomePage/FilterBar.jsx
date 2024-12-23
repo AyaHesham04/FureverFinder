@@ -390,7 +390,9 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   // };
 
   const handleChangeLocation = () => {
-    setLocation(null); // Reset the location, which can trigger the "Use My Current Location" flow again
+    setLocation(null);
+    setLatitude("");
+    setLongitude(""); // Reset the location, which can trigger the "Use My Current Location" flow again
   };
 
   const handleLocationRemove = () => {
