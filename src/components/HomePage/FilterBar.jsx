@@ -18,6 +18,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   const [search, setSearch] = useState("");
   const [image, setImage] = useState(null);
   const [file, setFile] = useState(null);
+  const [latitude, setLatitude] = useState("");
+  const [longitude, setLongitude] = useState("");
   const [location, setLocation] = useState("");
   const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
 
@@ -35,7 +37,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         images: cat.images.map((image) => `data:image/jpeg;base64,${image}`), // Convert base64 to image URL
         year: cat.year,
         month: cat.month,
-        address: cat.address,
+        longitude: cat.address.coordinates[0],
+        latitude: cat.address.coordinates[1],
         weight: cat.weight,
         description: cat.description,
         user_id: cat.user_id,
@@ -56,7 +59,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         images: dog.images.map((image) => `data:image/jpeg;base64,${image}`), // Convert base64 to image URL
         year: dog.year,
         month: dog.month,
-        address: dog.address,
+        longitude: dog.address.coordinates[0],
+        latitude: dog.address.coordinates[1],
         weight: dog.weight,
         description: dog.description,
         user_id: dog.user_id,
@@ -69,6 +73,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           phone: dog.user.phone,
         },
       }));
+      console.log("formattedCatData : ", formattedCatData);
 
       // Pass data to parent handlers
       onUpdateCatData(formattedCatData.slice(0, 3));
@@ -103,6 +108,10 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       if (selectedAge !== "") {
         params.append("min_age", selectedAge.value);
       }
+      if (latitude !== "" && longitude !== "") {
+        params.append("latitude", latitude);
+        params.append("longitude", longitude);
+      }
 
       // Prepare the FormData
       const formData = new FormData();
@@ -121,10 +130,10 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         image ? formData : null,
         image
           ? {
-              headers: {
-                "Content-Type": "multipart/form-data", // Ensure the correct content type is set for file uploads
-              },
-            }
+            headers: {
+              "Content-Type": "multipart/form-data", // Ensure the correct content type is set for file uploads
+            },
+          }
           : null
       );
 
@@ -133,40 +142,54 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
 
       const formattedCatData = Array.isArray(data.cats)
         ? data.cats.map((cat) => ({
-            id: cat.id,
-            name: cat.pet_name,
-            gender: cat.gender,
-            images: cat.images.map(
-              (image) => `data:image/jpeg;base64,${image}`
-            ), // Convert base64 to image URL
-            year: cat.year,
-            month: cat.month,
-            address: cat.address,
-            weight: cat.weight,
-            description: cat.description,
-            user_id: cat.user_id,
-            created_at: cat.created_at,
-            status: cat.status,
-          }))
+          id: cat.id,
+          name: cat.pet_name,
+          gender: cat.gender,
+          images: cat.images.map(
+            (image) => `data:image/jpeg;base64,${image}`
+          ), // Convert base64 to image URL
+          year: cat.year,
+          month: cat.month,
+          longitude: cat.address.coordinates[0],
+          latitude: cat.address.coordinates[1],
+          weight: cat.weight,
+          description: cat.description,
+          user_id: cat.user_id,
+          created_at: cat.created_at,
+          status: cat.status,
+          user: {
+            email: cat.user.email,
+            fname: cat.user.fname,
+            lname: cat.user.lname,
+            phone: cat.user.phone,
+          },
+        }))
         : [];
 
       const formattedDogData = Array.isArray(data.dogs)
         ? data.dogs.map((dog) => ({
-            id: dog.id,
-            name: dog.pet_name,
-            gender: dog.gender,
-            images: dog.images.map(
-              (image) => `data:image/jpeg;base64,${image}`
-            ), // Convert base64 to image URL
-            year: dog.year,
-            month: dog.month,
-            address: dog.address,
-            weight: dog.weight,
-            description: dog.description,
-            user_id: dog.user_id,
-            created_at: dog.created_at,
-            status: dog.status,
-          }))
+          id: dog.id,
+          name: dog.pet_name,
+          gender: dog.gender,
+          images: dog.images.map(
+            (image) => `data:image/jpeg;base64,${image}`
+          ), // Convert base64 to image URL
+          year: dog.year,
+          month: dog.month,
+          longitude: dog.address.coordinates[0],
+          latitude: dog.address.coordinates[1],
+          weight: dog.weight,
+          description: dog.description,
+          user_id: dog.user_id,
+          created_at: dog.created_at,
+          status: dog.status,
+          user: {
+            email: dog.user.email,
+            fname: dog.user.fname,
+            lname: dog.user.lname,
+            phone: dog.user.phone,
+          },
+        }))
         : [];
 
       // Pass data to parent handlers
@@ -315,7 +338,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       navigator.geolocation.getCurrentPosition(
         async (position) => {
           const { latitude, longitude } = position.coords;
-
+          setLatitude(latitude);
+          setLongitude(longitude);
           try {
             // OpenCage API call with your API key
             const response = await fetch(
@@ -398,9 +422,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${
-                  isPetOpen ? "rotate-180" : "rotate-0"
-                }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isPetOpen ? "rotate-180" : "rotate-0"
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -448,9 +471,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${
-                  isGenderOpen ? "rotate-180" : "rotate-0"
-                }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 max-[400px]:w-2 max-[400px]:h-2 transition-transform duration-300 ${isGenderOpen ? "rotate-180" : "rotate-0"
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -498,9 +520,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
             >
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${
-                  isAgeOpen ? "rotate-180" : "rotate-0"
-                }`}
+                className={`2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 transition-transform duration-300 ${isAgeOpen ? "rotate-180" : "rotate-0"
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
