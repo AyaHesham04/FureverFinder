@@ -93,8 +93,7 @@ const UpdatePet = () => {
       const token = Cookies.get("auth_token");
       // API request
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/pets/update",
-        // "https://api-fureverfinders.amrnabih.com/api/pets/store",
+        `http://127.0.0.1:8000/api/pets/update/${formData.id}`, // Use the pet ID in the URL
         data,
         {
           headers: {
