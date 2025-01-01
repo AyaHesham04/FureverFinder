@@ -120,7 +120,13 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading, onFilter
       }
 
       if (selectedAge !== "") {
-        params.append("min_age", selectedAge.value);
+        console.log("label:", selectedAge.label);
+
+        if (selectedAge.label.includes("mo")) {
+          params.append("min_age_month", selectedAge.value);
+        } else if (selectedAge.label.includes("yr")) {
+          params.append("min_age_year", selectedAge.value);
+        }
       }
       if (latitude !== "" && longitude !== "") {
         params.append("latitude", latitude);
@@ -241,8 +247,8 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading, onFilter
   // Generate options for years (1 year to 20 years)
   for (let i = 1; i <= 20; i++) {
     ageOptions.push({
-      value: `${i * 12}`,
-      label: `${i} ${i === 1 ? "yr" : "yrs"}`,
+      value: `${i}`,
+      label: `${i} ${i === 1 ? "yr" : "yr"}`,
     });
   }
 
