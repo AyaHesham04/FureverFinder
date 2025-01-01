@@ -6,6 +6,7 @@ import Login from "./pages/LoginPage";
 import HomePage from "./pages/HomePage";
 import PetDetails from "./pages/PetDetailsPage";
 import AddPet from "./pages/AddPetPage";
+import UpdatePet from "./pages/UpdatePetPage";
 import ProfilePage from "./pages/ProfilePage";
 import ProtectedRoute from "./auth/ProtectedRoute";
 import { ToastContainer } from "react-toastify";
@@ -35,6 +36,14 @@ function App() {
             element={
               <ProtectedRoute>
                 <AddPet />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/update-pet"
+            element={
+              <ProtectedRoute>
+                <UpdatePet />
               </ProtectedRoute>
             }
           />

@@ -164,7 +164,7 @@ const PetDetails = (state) => {
               <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
                 <div className="bg-white rounded-lg p-6 w-80">
                   <h2 className="text-[#E6B9BA] font-bold mb-4 2xl:text-[26px] xl:text-[24px] lg:text-[22px] md:text-[21px] sm:text-[18px] max-[430px]:text-[16px]">Phone Number</h2>
-                  <p className="mb-4 2xl:text-[24px] xl:text-[22px] lg:text-[20px] md:text-[19px] sm:text-[16px] max-[430px]:text-[14px]">00000000</p>
+                  <p className="mb-4 2xl:text-[24px] xl:text-[22px] lg:text-[20px] md:text-[19px] sm:text-[16px] max-[430px]:text-[14px]">{petData.user.phone}</p>
                   <div className="flex justify-end">
                     <button
                       onClick={closePhoneModal}
