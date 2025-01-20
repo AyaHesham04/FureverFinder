@@ -14,7 +14,7 @@ const Footer = () => {
       {/* Content */}
       <div className="relative text-center">
         {/* Follow Us! Text */}
-        <h2 className="text-gray-700 font-poppins font-semibold text-[28px] max-[430px]:text-[20px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] uppercase mb-4">
+        <h2 className="text-gray-700 font-poppins font-semibold text-[28px] max-[430px]:text-[16px] lg:text-[27px] xl:text-[30px] 2xl:text-[30px] uppercase mb-4">
           Follow Us!
         </h2>
 

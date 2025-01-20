@@ -14,15 +14,13 @@ const AddPet = () => {
     gender: "",
     year: "",
     month: "",
-    latitude: "",
-    longitude: "",
+    address: "",
     weight: "",
     description: "",
     type: "",
     status: "",
   });
-  const [location, setLocation] = useState("");
-  const [isLocationModalOpen, setIsLocationModalOpen] = useState(false);
+  const [address, setAddress] = useState("");
   const [selectedImages, setSelectedImages] = useState([]);
   const [selectedFiles, setSelectedFiles] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -106,71 +104,14 @@ const AddPet = () => {
       setLoading(false);
     }
   };
-  const handleUseCurrentLocation = async () => {
-    if (navigator.geolocation) {
-      navigator.geolocation.getCurrentPosition(
-        async (position) => {
-          const { latitude, longitude } = position.coords;
-          setFormData({ ...formData, latitude: latitude, longitude: longitude });
-          try {
-            // OpenCage API call with your API key
-            const response = await fetch(
-              `https://api.opencagedata.com/geocode/v1/json?q=${latitude}+${longitude}&key=907eecc4dc364380ad65c07d8f1233ba`
-            );
 
-            if (!response.ok)
-              throw new Error("Failed to fetch location details.");
-
-            const data = await response.json();
-
-            if (data.results && data.results.length > 0) {
-              const components = data.results[0].components;
-
-              const country = components.country || "Unknown Country";
-              const city =
-                components.city ||
-                components.town ||
-                components.village ||
-                "Unknown City";
-
-              // Set the location in your state or variable
-              setLocation(`City: ${city}, Country: ${country}`);
-            } else {
-              alert("Unable to retrieve the location details.");
-            }
-
-            setIsLocationModalOpen(false);
-          } catch (error) {
-            console.error(error);
-            alert("Unable to retrieve location details.");
-          }
-        },
-        (error) => {
-          console.error(error);
-          alert("Unable to retrieve your location.");
-        }
-      );
-    } else {
-      alert("Geolocation is not supported by your browser.");
-    }
-  };
-  const handleChangeLocation = () => {
-    setLocation(null); // Reset the location, which can trigger the "Use My Current Location" flow again
-  };
   return (
     <div className="relative h-screen w-screen scrollbar-hide bg-stripes flex items-center justify-center">
       <BackButton></BackButton>
-
-      <div className="relative z-10 flex items-center justify-center pt-7 max-[430px]:pt-5 lg:pt-12 max-h-full">
-        <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
-          {/* Dog image */}
-          <img
-            src={dogImage}
-            alt="Dog hanging"
-            className="absolute top-[-110px] lg:top-[-105px] max-[430px]:top-[-90px] right-1/4 transform translate-x-full w-[110px] lg:w-[105px] max-[430px]:w-[90px] block max-[430px]:hidden"
-          />
+      <div className="w-full h-full relative flex items-center justify-center overflow-y-auto">
+        <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg sm:shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
           <form
-            className="w-full h-full overflow-y-auto scrollbar-hide"
+            className="w-full h-full scrollbar-hide"
             onSubmit={handleSubmit}
           >
             {/* Image Upload Section */}
@@ -379,8 +320,25 @@ const AddPet = () => {
                 <p className="text-red-500 text-xs mt-1">{errors.weight[0]}</p>
               )}
             </div>
-
-
+            {/* Address Field */}
+            <div className="mb-5">
+              <input
+                type="text"
+                name="address"
+                placeholder="Address"
+                value={formData.address}
+                onChange={handleChange}
+                className={`w-4/5 px-3 py-2 border ${errors.address
+                  ? "border-red-500"
+                  : "border-[rgba(95,91,91,0.3)]"
+                  } rounded-lg text-sm max-[430px]:text-xs lg:text-md font-inter`}
+              />
+              {errors.address && (
+                <p className="text-red-500 text-xs mt-1">
+                  {errors.address[0]}
+                </p>
+              )}
+            </div>
             {/* Description Field */}
             <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
               <textarea
@@ -399,70 +357,27 @@ const AddPet = () => {
                 </p>
               )}
             </div>
-            {/* Address Field */}
-            <div className="mb-5 max-[430px]:mb-3 lg:mb-5 xl:mb-7 2xl:mb-5">
-              {/* <div className="relative flex items-center"> */}
-              {!location && (
-                <div className="text-[#424242] cursor-pointer group hover:text-[#7BCFD180]">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 24 24"
-                    className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-4 max-[430px]:h-4 inline-block text-[#424242] group-hover:text-[#7BCFD180] rounded"
-                    fill="currentColor"
-                    // onClick={handleLocationClick}
-                    onClick={handleUseCurrentLocation}
-                  >
-                    <path d="M12 2C8.13 2 5 5.13 5 9c0 4.93 7 13 7 13s7-8.07 7-13c0-3.87-3.13-7-7-7zm0 10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
-                  </svg>
-                  <span className="group-hover:text-[#7BCFD180] ml-1" onClick={handleUseCurrentLocation}>Add Your location</span>
-                </div>
-              )}
-              {/* {isLocationModalOpen && (
-              <div className="location-modal absolute top-full mt-2 bg-white rounded-lg shadow-md w-full">
-                <div
-                  onClick={handleUseCurrentLocation}
-                  className="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                >
-                  Use My Current Location
-                </div>
-              </div>
-            )} */}
-              {location && (
-                <div className="w-full">
-                  <span className="text-[#424242] w-full">{location}</span>
-                  <button
-                    className="text-center text-red-600 hover:underline w-full 2xl:text-[17px] xl:text-[15px] lg:text-[13px] md:text-[12px] sm:text-[10px] max-[430px]:text-[8px]"
-                    // onClick={handleChangeLocation}
-                    onClick={handleChangeLocation}
-                  >
-                    Remove
-                  </button>
-                </div>
-              )}
-              {/* <LocationPicker onLocationSelect={handleLocationSelect} /> */}
-              {/* </div> */}
-            </div>
             {/* Status (Radio Buttons) */}
             <div className="flex justify-center items-center space-x-20 mb-4">
-              <label className="cursor-pointer flex text-sm max-[430px]:text-xs lg:text-md font-inter">
+              <label className="cursor-pointer flex items-center text-sm max-[430px]:text-xs lg:text-md font-inter">
                 <input
                   type="radio"
                   name="status"
                   value="pairing"
                   checked={formData.status === "pairing"}
                   onChange={handleChange}
-                  className="mr-2 peer appearance-none 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 border-2 border-gray-500 rounded-full checked:bg-pink-light"
+                  className="mr-2 peer appearance-none 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 max-[400px]:w-4 max-[400px]:h-4 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Pairing
               </label>
-              <label className="cursor-pointer flex text-sm max-[430px]:text-xs lg:text-md font-inter">
+              <label className="cursor-pointer flex items-center text-sm max-[430px]:text-xs lg:text-md font-inter">
                 <input
                   type="radio"
                   name="status"
                   value="adopted"
                   checked={formData.status === "adopted"}
                   onChange={handleChange}
-                  className="mr-2 peer appearance-none 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 border-2 border-gray-500 rounded-full checked:bg-pink-light"
+                  className="mr-2 peer appearance-none 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 max-[400px]:w-4 max-[400px]:h-4 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Adoption
               </label>

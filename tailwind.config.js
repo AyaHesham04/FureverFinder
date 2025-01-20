@@ -26,22 +26,3 @@ export default {
   ],
 }
 
-// export default {
-//   content: ['./index.html', './src/**/*.{js,jsx,ts,tsx}'],
-//   theme: {
-//     extend: {
-//       colors: {
-//         pink: {
-//           light: '#FEBFC7',
-//           button: '#FFE5E6',
-//         },
-//       },
-//       fontFamily: {
-//         inter: ['Inter', 'sans-serif'],
-//         poppins: ['Poppins', 'sans-serif'],
-//       },
-//     },
-//   },
-//   plugins: [],
-// };
-

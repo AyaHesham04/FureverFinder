@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import dogImage from "../assets/SignUpPage/SignupDog.png";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie"; // Import js-cookie to handle cookies
 import BackButton from "../components/BackButton";
 
@@ -48,12 +48,30 @@ const Login = () => {
     }
   };
 
+  const [isSmallScreen, setIsSmallScreen] = useState(false);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setIsSmallScreen(window.innerWidth <= 350);
+    };
+
+    // Initial check and listener
+    handleResize();
+    window.addEventListener("resize", handleResize);
+
+    // Cleanup listener on component unmount
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
+
   return (
-    <div className="relative h-screen w-screen bg-stripes flex items-center justify-center">
-      <BackButton redirectTo="/start"></BackButton>
+    <div className={`relative h-screen w-screen ${isSmallScreen ? "bg-none" : "bg-stripes "
+      } flex items-center justify-center`}>
+      <BackButton redirectTo="/"></BackButton>
       {/* Form container */}
       <div className="relative z-10 flex items-center justify-center pt-7 max-[430px]:pt-5 lg:pt-12 max-h-full">
-        <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-9 lg:py-8 max-[430px]:py-7 rounded-lg shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
+        <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-9 lg:py-8 max-[430px]:py-7 rounded-lg sm:shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
           {/* Dog image */}
           <img
             src={dogImage}
@@ -66,7 +84,7 @@ const Login = () => {
           </h1>
 
           {/* Form */}
-          <form className="w-full h-full" onSubmit={handleLogin}>
+          <form className="w-full h-full mb-5 max-[430px]:mb-5 lg:mb-5 xl:mb-7 2xl:mb-5" onSubmit={handleLogin}>
             <div className="mb-5 max-[430px]:mb-5 lg:mb-5 xl:mb-7 2xl:mb-5">
               <input
                 type="email"
@@ -93,6 +111,9 @@ const Login = () => {
               {loading ? "Logging in..." : "Login"}
             </button>
           </form>
+          <h4 className="text-[#5F5B5B] text-sm max-[430px]:text-xs lg:text-md font-inter">
+            Don&apos;t have an account? <Link className="text-pink-light ml-1 hover:underline" to="/signup">Sign Up</Link>
+          </h4>
         </div>
       </div>
     </div>
