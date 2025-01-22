@@ -109,7 +109,7 @@ const AddPet = () => {
     <div className="relative h-screen w-screen scrollbar-hide bg-stripes flex items-center justify-center">
       <BackButton></BackButton>
       <div className="w-full h-full relative flex items-center justify-center overflow-y-auto">
-        <div className="relative bg-white w-[500px] lg:w-[600px] max-[430px]:w-[350px] max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg sm:shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
+        <div className="relative bg-white w-[500px] max-[560px]:w-[500px] max-[560px]:h-fit lg:w-[600px] max-[430px]:w-full max-[400px]:w-[340px] py-7 lg:py-6 max-[430px]:py-4 rounded-lg sm:shadow-md text-center border-4 max-[430px]:border-0 border-pink-light">
           <form
             className="w-full h-full scrollbar-hide"
             onSubmit={handleSubmit}
@@ -120,12 +120,12 @@ const AddPet = () => {
               {selectedImages.length == 0 ? (
                 <img
                   src={cam}
-                  className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[430px]:w-18 max-[430px]:h-16"
+                  className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[560px]:w-18 max-[560px]:h-24 max-[430px]:w-18 max-[430px]:h-16"
                 />
               ) : null}
               {selectedImages.length == 0 ? (
                 <button
-                  className="absolute max-[430px]:top-[70px] max-[430px]:right-[130px] sm:right-[195px] sm:top-[100px] md:right-[200px] md:top-[90px] lg:right-[250px] lg:top-[90px] xl:right-[230px] xl:top-[100px] 2xl:right-[220px] 2xl:top-[110px] 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg"
+                  className="absolute max-[430px]:top-[70px] max-[430px]:right-[130px] max-[560px]:top-[110px] max-[560px]:right-[180px] sm:right-[195px] sm:top-[100px] md:right-[200px] md:top-[90px] lg:right-[250px] lg:top-[90px] xl:right-[230px] xl:top-[100px] 2xl:right-[230px] 2xl:top-[120px] 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 bg-pink-light rounded-lg"
                   type="button"
                   onClick={() => document.getElementById("imageUpload").click()} // Trigger file input click
                 >
@@ -135,7 +135,7 @@ const AddPet = () => {
                     viewBox="0 0 24 24"
                     strokeWidth={1.5}
                     stroke="white"
-                    className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5"
+                    className="2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[560px]:w-5 max-[560px]:h-5 max-[430px]:w-5 max-[430px]:h-5"
                   >
                     <path
                       strokeLinecap="round"
@@ -151,12 +151,12 @@ const AddPet = () => {
                     <img
                       src={image}
                       alt={`Preview ${index}`}
-                      className="2xl:w-28 2xl:h-28 xl:w-24 xl:h-24 lg:w-20 lg:h-20 md:w-20 md:h-20 sm:w-20 sm:h-20 max-[430px]:w-18 max-[430px]:h-16 object-cover rounded-lg"
+                      className="2xl:w-36 2xl:h-28 xl:w-32 xl:h-24 lg:w-32 lg:h-20 md:w-28 md:h-20 sm:w-28 sm:h-20 max-[560px]:w-18 max-[560px]:h-16 max-[430px]:w-18 max-[430px]:h-14"
                     />
                     <button
                       type="button"
                       onClick={() => handleRemoveImage(index)}
-                      className="absolute top-1 right-1 bg-red-500 text-white 2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 rounded-full flex items-center justify-center"
+                      className="absolute top-1 right-1 bg-red-500 text-white 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[560px]:w-5 max-[560px]:h-5 max-[430px]:w-5 max-[430px]:h-5 rounded-full flex items-center justify-center"
                     >
                       ✕
                     </button>
@@ -366,7 +366,7 @@ const AddPet = () => {
                   value="pairing"
                   checked={formData.status === "pairing"}
                   onChange={handleChange}
-                  className="mr-2 peer appearance-none 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 max-[400px]:w-4 max-[400px]:h-4 border-2 border-gray-500 rounded-full checked:bg-pink-light"
+                  className="mr-2 peer appearance-none 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[560px]:w-5 max-[560px]:h-5 max-[430px]:w-5 max-[430px]:h-5 max-[400px]:w-4 max-[400px]:h-4 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Pairing
               </label>
@@ -377,7 +377,7 @@ const AddPet = () => {
                   value="adopted"
                   checked={formData.status === "adopted"}
                   onChange={handleChange}
-                  className="mr-2 peer appearance-none 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-5 max-[430px]:h-5 max-[400px]:w-4 max-[400px]:h-4 border-2 border-gray-500 rounded-full checked:bg-pink-light"
+                  className="mr-2 peer appearance-none 2xl:w-7 2xl:h-7 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[560px]:w-5 max-[560px]:h-5 max-[430px]:w-5 max-[430px]:h-5 max-[400px]:w-4 max-[400px]:h-4 border-2 border-gray-500 rounded-full checked:bg-pink-light"
                 />
                 Adoption
               </label>

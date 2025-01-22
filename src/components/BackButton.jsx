@@ -11,7 +11,7 @@ function BackButton({ redirectTo = "/" }) {
       <img
         src={backArrow}
         alt="Back"
-        className="z-10 2xl:w-10 2xl:h-10 xl:w-10 xl:h-10 lg:w-10 lg:h-10 md:w-9 md:h-9 sm:w-8 sm:h-8 max-[430px]:w-7 max-[430px]:h-7 transition-transform hover:scale-110"
+        className="z-10 2xl:w-10 2xl:h-10 xl:w-10 xl:h-10 lg:w-10 lg:h-10 md:w-9 md:h-9 sm:w-8 sm:h-8 max-[560px]:w-9 max-[560px]:h-9 max-[430px]:w-7 max-[430px]:h-7 transition-transform hover:scale-110"
       />
     </Link>
   );

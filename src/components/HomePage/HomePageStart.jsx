@@ -10,11 +10,10 @@ const HomePageStart = () => {
       <div className="relative w-full 2xl:h-2/3 xl:h-2/3 lg:h-2/3 md:h-1/2">
         {/* Background Image */}
         <img src={background} className="w-full h-full" />
-        {/* <img src={background} className="w-full h-full object-cover" /> */}
 
         {/* Menu */}
         <div className="z-10 absolute top-0 left-0 p-4">
-         <Menu />
+          <Menu />
         </div>
 
         {/* Centered Circle */}

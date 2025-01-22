@@ -8,153 +8,153 @@ import temp2 from "../assets/TemporaryImages/cat2.jpg";
 import temp3 from "../assets/TemporaryImages/cat3.jpg";
 
 const HomePage = () => {
-  // const [catData, setCatData] = useState([]);
-  const catData = [
-    {
-      id: "cat-1",
-      name: "Whiskers",
-      gender: "male",
-      type: "cat",
-      images: [temp1],
-    },
-    {
-      id: "cat-2",
-      name: "Mittens",
-      gender: "female",
-      type: "cat",
-      images: [temp2],
-    },
-    {
-      id: "cat-3",
-      name: "Shadow",
-      gender: "male",
-      type: "cat",
-      images: [temp3],
-    },
-    {
-      id: "cat-4",
-      name: "Luna",
-      gender: "female",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=4"],
-    },
-    {
-      id: "cat-5",
-      name: "Simba",
-      gender: "male",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=5"],
-    },
-    {
-      id: "cat-6",
-      name: "Ginger",
-      gender: "female",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=6"],
-    },
-    {
-      id: "cat-7",
-      name: "Oliver",
-      gender: "male",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=7"],
-    },
-    {
-      id: "cat-8",
-      name: "Cleo",
-      gender: "female",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=8"],
-    },
-    {
-      id: "cat-9",
-      name: "Leo",
-      gender: "male",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=9"],
-    },
-    {
-      id: "cat-10",
-      name: "Bella",
-      gender: "female",
-      type: "cat",
-      images: ["https://placekitten.com/300/300?image=10"],
-    },
-  ];
+  const [catData, setCatData] = useState([]);
+  // const catData = [
+  //   {
+  //     id: "cat-1",
+  //     name: "Whiskers",
+  //     gender: "male",
+  //     type: "cat",
+  //     images: [temp1],
+  //   },
+  //   {
+  //     id: "cat-2",
+  //     name: "Mittens",
+  //     gender: "female",
+  //     type: "cat",
+  //     images: [temp2],
+  //   },
+  //   {
+  //     id: "cat-3",
+  //     name: "Shadow",
+  //     gender: "male",
+  //     type: "cat",
+  //     images: [temp3],
+  //   },
+  //   {
+  //     id: "cat-4",
+  //     name: "Luna",
+  //     gender: "female",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=4"],
+  //   },
+  //   {
+  //     id: "cat-5",
+  //     name: "Simba",
+  //     gender: "male",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=5"],
+  //   },
+  //   {
+  //     id: "cat-6",
+  //     name: "Ginger",
+  //     gender: "female",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=6"],
+  //   },
+  //   {
+  //     id: "cat-7",
+  //     name: "Oliver",
+  //     gender: "male",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=7"],
+  //   },
+  //   {
+  //     id: "cat-8",
+  //     name: "Cleo",
+  //     gender: "female",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=8"],
+  //   },
+  //   {
+  //     id: "cat-9",
+  //     name: "Leo",
+  //     gender: "male",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=9"],
+  //   },
+  //   {
+  //     id: "cat-10",
+  //     name: "Bella",
+  //     gender: "female",
+  //     type: "cat",
+  //     images: ["https://placekitten.com/300/300?image=10"],
+  //   },
+  // ];
 
-  // const [dogData, setDogData] = useState([]);
-  const dogData = [
-    {
-      id: "dog-1",
-      name: "Buddy",
-      gender: "male",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=1"],
-    },
-    {
-      id: "dog-2",
-      name: "Charlie",
-      gender: "male",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=2"],
-    },
-    {
-      id: "dog-3",
-      name: "Max",
-      gender: "male",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=3"],
-    },
-    {
-      id: "dog-4",
-      name: "Bella",
-      gender: "female",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=4"],
-    },
-    {
-      id: "dog-5",
-      name: "Daisy",
-      gender: "female",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=5"],
-    },
-    {
-      id: "dog-6",
-      name: "Rocky",
-      gender: "male",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=6"],
-    },
-    {
-      id: "dog-7",
-      name: "Lola",
-      gender: "female",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=7"],
-    },
-    {
-      id: "dog-8",
-      name: "Zoe",
-      gender: "female",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=8"],
-    },
-    {
-      id: "dog-9",
-      name: "Jack",
-      gender: "male",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=9"],
-    },
-    {
-      id: "dog-10",
-      name: "Molly",
-      gender: "female",
-      type: "dog",
-      images: ["https://placedog.net/300/300?id=10"],
-    },
-  ];
+  const [dogData, setDogData] = useState([]);
+  // const dogData = [
+  //   {
+  //     id: "dog-1",
+  //     name: "Buddy",
+  //     gender: "male",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=1"],
+  //   },
+  //   {
+  //     id: "dog-2",
+  //     name: "Charlie",
+  //     gender: "male",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=2"],
+  //   },
+  //   {
+  //     id: "dog-3",
+  //     name: "Max",
+  //     gender: "male",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=3"],
+  //   },
+  //   {
+  //     id: "dog-4",
+  //     name: "Bella",
+  //     gender: "female",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=4"],
+  //   },
+  //   {
+  //     id: "dog-5",
+  //     name: "Daisy",
+  //     gender: "female",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=5"],
+  //   },
+  //   {
+  //     id: "dog-6",
+  //     name: "Rocky",
+  //     gender: "male",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=6"],
+  //   },
+  //   {
+  //     id: "dog-7",
+  //     name: "Lola",
+  //     gender: "female",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=7"],
+  //   },
+  //   {
+  //     id: "dog-8",
+  //     name: "Zoe",
+  //     gender: "female",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=8"],
+  //   },
+  //   {
+  //     id: "dog-9",
+  //     name: "Jack",
+  //     gender: "male",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=9"],
+  //   },
+  //   {
+  //     id: "dog-10",
+  //     name: "Molly",
+  //     gender: "female",
+  //     type: "dog",
+  //     images: ["https://placedog.net/300/300?id=10"],
+  //   },
+  // ];
 
   const [catPage, setCatPage] = useState(1);
   const [dogPage, setDogPage] = useState(1);
