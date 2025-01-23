@@ -27,12 +27,14 @@ const Menu = () => {
   // Validate token
   const validateToken = async (token) => {
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/user", {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${token}`, // Add the token in the Authorization header
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URLL}user/show`
+        , {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`, // Add the token in the Authorization header
+          },
+        });
 
       if (response.ok) {
         const userData = await response.json();
@@ -55,13 +57,15 @@ const Menu = () => {
     if (!token) return;
 
     try {
-      const response = await fetch("http://127.0.0.1:8000/api/logout", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-      });
+      const response = await fetch(
+        `${import.meta.env.VITE_BACKEND_URLL}logout`
+        , {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+        });
 
       if (response.ok) {
         deleteCookie("auth_token"); // Remove token from cookies
@@ -134,9 +138,8 @@ const Menu = () => {
       {/* Dropdown Menu */}
       <div
         ref={menuRef} // Attach the ref to the dropdown menu
-        className={`absolute top-full left-3 max-[430px]:left-2 mt-2 max-[430px]:mt-0 max-[400px]:-mt-1 2xl:w-56 xl:w-52 lg:w-48 md:w-44 sm:w-36 max-[430px]:w-24 max-[400px]:w-22 bg-white shadow-md rounded-md transition-all ${
-          isOpen ? "block" : "hidden"
-        }`}
+        className={`absolute top-full left-3 max-[430px]:left-2 mt-2 max-[430px]:mt-0 max-[400px]:-mt-1 2xl:w-56 xl:w-52 lg:w-48 md:w-44 sm:w-36 max-[430px]:w-24 max-[400px]:w-22 bg-white shadow-md rounded-md transition-all ${isOpen ? "block" : "hidden"
+          }`}
       >
         <ul className="font-poppins font-semibold text-[#5F5B5B] 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px] p-1.5 md:p-3 max-[430px]:p-1 space-y-2 max-[430px]:space-y-1">
           <Link

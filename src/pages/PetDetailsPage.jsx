@@ -12,48 +12,6 @@ import { toast } from "react-toastify";
 const PetDetails = (state) => {
   const location = useLocation();
   const petData = location.state.pet;
-  const [geo, setGeo] = useState("");
-  useEffect(() => {
-    // Define the async function inside the useEffect
-    const fetchLocationData = async () => {
-      try {
-        // OpenCage API call with your API key
-        const response = await fetch(
-          `https://api.opencagedata.com/geocode/v1/json?q=${petData.latitude}+${petData.longitude}&key=907eecc4dc364380ad65c07d8f1233ba`
-        );
-
-        if (!response.ok)
-          throw new Error("Failed to fetch location details.");
-
-        const data = await response.json();
-
-        if (data.results && data.results.length > 0) {
-          const components = data.results[0].components;
-
-          const country = components.country || "Unknown Country";
-          const city =
-            components.city ||
-            components.town ||
-            components.village ||
-            "Unknown City";
-
-          // Set the location in your state or variable
-          setGeo(`City: ${city}, Country: ${country}`);
-        } else {
-          toast.error("Unable to retrieve the location details.");
-
-        }
-      } catch (error) {
-        console.error(error);
-        toast.error("Unable to retrieve location details.");
-
-      }
-    };
-
-    // Call the async function immediately
-    fetchLocationData();
-  }, [petData.latitude, petData.longitude]); // Dependency array with petData
-
   const [isPhoneOpen, setIsPhoneOpen] = useState(false);
 
   const openPhoneModal = () => {
@@ -63,7 +21,7 @@ const PetDetails = (state) => {
   const closePhoneModal = () => {
     setIsPhoneOpen(false);
   };
-
+  console.log(petData);
   const mediaData = [
     { url: "https://via.placeholder.com/300", type: "image" },
     { url: "https://www.w3schools.com/html/mov_bbb.mp4", type: "video" },
@@ -83,16 +41,9 @@ const PetDetails = (state) => {
           {petData.name}
         </h1>
         <div className="flex items-center">
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            viewBox="0 0 24 24"
-            className="2xl:w-6 2xl:h-6 xl:w-6 xl:h-6 lg:w-6 lg:h-6 md:w-5 md:h-5 sm:w-4 sm:h-4 max-[430px]:w-3 max-[430px]:h-3 inline-block mr-1"
-            fill="#E6B9BA"
-          >
-            <path d="M12 2C8.13 2 5 5.13 5 9c0 4.93 7 13 7 13s7-8.07 7-13c0-3.87-3.13-7-7-7zm0 10.5a2.5 2.5 0 1 1 0-5 2.5 2.5 0 0 1 0 5z" />
-          </svg>
+
           <p className="text-[#5F5B5B] opacity-50 font-poppins font-[400] 2xl:text-[24px] xl:text-[17px] lg:text-[17px] md:text-[15px] sm:text-[15px] max-[430px]:text-xs">
-            {geo}
+            {petData.address}
           </p>
         </div>
         <div className="w-full flex justify-center items-center py-5 lg:py-6 md:py-4 mx-auto">

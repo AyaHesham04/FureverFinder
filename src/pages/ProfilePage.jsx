@@ -11,78 +11,7 @@ function ProfilePage({ userData }) {
   const [fullName, setFullName] = useState("");
   const [catData, setCatData] = useState([]);
   const [dogData, setDogData] = useState([]);
-  // const dogData = [
-  //   {
-  //     id: "dog-1",
-  //     name: "Buddy",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: [temp1],
-  //   },
-  //   {
-  //     id: "dog-2",
-  //     name: "Charlie",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: [temp2],
-  //   },
-  //   {
-  //     id: "dog-3",
-  //     name: "Max",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: [temp3],
-  //   },
-  //   {
-  //     id: "dog-4",
-  //     name: "Bella",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=4"],
-  //   },
-  //   {
-  //     id: "dog-5",
-  //     name: "Daisy",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=5"],
-  //   },
-  //   {
-  //     id: "dog-6",
-  //     name: "Rocky",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=6"],
-  //   },
-  //   {
-  //     id: "dog-7",
-  //     name: "Lola",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=7"],
-  //   },
-  //   {
-  //     id: "dog-8",
-  //     name: "Zoe",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=8"],
-  //   },
-  //   {
-  //     id: "dog-9",
-  //     name: "Jack",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=9"],
-  //   },
-  //   {
-  //     id: "dog-10",
-  //     name: "Molly",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=10"],
-  //   },
-  // ];
+
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
@@ -97,19 +26,20 @@ function ProfilePage({ userData }) {
         id: cat.id,
         name: cat.pet_name,
         gender: cat.gender,
-        images: cat.images.map((image) => `data:image/jpeg;base64,${image}`),
+        images: cat.images,
         year: cat.year,
         month: cat.month,
         weight: cat.weight,
         description: cat.description,
+        address: cat.address,
         user_id: cat.user_id,
         created_at: cat.created_at,
         status: cat.status,
         user: {
-          email: userData.email,
-          fname: userData.fname,
-          lname: userData.lname,
-          phone: userData.phone,
+          email: userData.user.email,
+          fname: userData.user.fname,
+          lname: userData.user.lname,
+          phone: userData.user.phone,
         },
       }))
     );
@@ -118,19 +48,20 @@ function ProfilePage({ userData }) {
         id: dog.id,
         name: dog.pet_name,
         gender: dog.gender,
-        images: dog.images.map((image) => `data:image/jpeg;base64,${image}`),
+        images: dog.images,
         year: dog.year,
         month: dog.month,
         weight: dog.weight,
         description: dog.description,
+        address: dog.address,
         user_id: dog.user_id,
         created_at: dog.created_at,
         status: dog.status,
         user: {
-          email: userData.email,
-          fname: userData.fname,
-          lname: userData.lname,
-          phone: userData.phone,
+          email: userData.user.email,
+          fname: userData.user.fname,
+          lname: userData.user.lname,
+          phone: userData.user.phone,
         },
       }))
     );

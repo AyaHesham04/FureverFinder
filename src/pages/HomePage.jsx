@@ -3,169 +3,19 @@ import HomePageStart from "../components/HomePage/HomePageStart";
 import FilterBar from "../components/HomePage/FilterBar";
 import Card from "../components/Card";
 import Footer from "../components/Footer";
-import temp1 from "../assets/TemporaryImages/cat1.jpg";
-import temp2 from "../assets/TemporaryImages/cat2.jpg";
-import temp3 from "../assets/TemporaryImages/cat3.jpg";
 
 const HomePage = () => {
   const [catData, setCatData] = useState([]);
-  // const catData = [
-  //   {
-  //     id: "cat-1",
-  //     name: "Whiskers",
-  //     gender: "male",
-  //     type: "cat",
-  //     images: [temp1],
-  //   },
-  //   {
-  //     id: "cat-2",
-  //     name: "Mittens",
-  //     gender: "female",
-  //     type: "cat",
-  //     images: [temp2],
-  //   },
-  //   {
-  //     id: "cat-3",
-  //     name: "Shadow",
-  //     gender: "male",
-  //     type: "cat",
-  //     images: [temp3],
-  //   },
-  //   {
-  //     id: "cat-4",
-  //     name: "Luna",
-  //     gender: "female",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=4"],
-  //   },
-  //   {
-  //     id: "cat-5",
-  //     name: "Simba",
-  //     gender: "male",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=5"],
-  //   },
-  //   {
-  //     id: "cat-6",
-  //     name: "Ginger",
-  //     gender: "female",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=6"],
-  //   },
-  //   {
-  //     id: "cat-7",
-  //     name: "Oliver",
-  //     gender: "male",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=7"],
-  //   },
-  //   {
-  //     id: "cat-8",
-  //     name: "Cleo",
-  //     gender: "female",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=8"],
-  //   },
-  //   {
-  //     id: "cat-9",
-  //     name: "Leo",
-  //     gender: "male",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=9"],
-  //   },
-  //   {
-  //     id: "cat-10",
-  //     name: "Bella",
-  //     gender: "female",
-  //     type: "cat",
-  //     images: ["https://placekitten.com/300/300?image=10"],
-  //   },
-  // ];
-
   const [dogData, setDogData] = useState([]);
-  // const dogData = [
-  //   {
-  //     id: "dog-1",
-  //     name: "Buddy",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=1"],
-  //   },
-  //   {
-  //     id: "dog-2",
-  //     name: "Charlie",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=2"],
-  //   },
-  //   {
-  //     id: "dog-3",
-  //     name: "Max",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=3"],
-  //   },
-  //   {
-  //     id: "dog-4",
-  //     name: "Bella",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=4"],
-  //   },
-  //   {
-  //     id: "dog-5",
-  //     name: "Daisy",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=5"],
-  //   },
-  //   {
-  //     id: "dog-6",
-  //     name: "Rocky",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=6"],
-  //   },
-  //   {
-  //     id: "dog-7",
-  //     name: "Lola",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=7"],
-  //   },
-  //   {
-  //     id: "dog-8",
-  //     name: "Zoe",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=8"],
-  //   },
-  //   {
-  //     id: "dog-9",
-  //     name: "Jack",
-  //     gender: "male",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=9"],
-  //   },
-  //   {
-  //     id: "dog-10",
-  //     name: "Molly",
-  //     gender: "female",
-  //     type: "dog",
-  //     images: ["https://placedog.net/300/300?id=10"],
-  //   },
-  // ];
-
   const [catPage, setCatPage] = useState(1);
   const [dogPage, setDogPage] = useState(1);
+  const [loading, setLoading] = useState(true);
+
   const itemsPerPage = 6; // Display 6 animals per page
 
   const getPaginatedData = (data, page) => {
-    const startIndex = (page - 1) * itemsPerPage;
-    return data.slice(startIndex, startIndex + itemsPerPage);
+    return data;
   };
-
-  const totalPages = (data) => Math.ceil(data.length / itemsPerPage);
 
   const renderPageNumbers = (currentPage, total, setPage) => {
     return (
@@ -223,27 +73,31 @@ const HomePage = () => {
     );
   };
 
-
-  const [loading, setLoading] = useState(true);
   const handleLoading = (newLoadingState) => {
     setLoading(newLoadingState);
   };
+
   const handleCatDataUpdate = (newCatData) => {
     setCatData(newCatData);
   };
 
   const handleDogDataUpdate = (newDogData) => {
-    console.log(newDogData);
     setDogData(newDogData);
   };
 
   return (
     <div className="w-full h-screen">
       <HomePageStart />
+      {
+        console.log(catData)
+
+      }
       <FilterBar
         onUpdateCatData={handleCatDataUpdate}
         onUpdateDogData={handleDogDataUpdate}
         onUpdateLoading={handleLoading}
+        catPage={catPage}
+        dogPage={dogPage}
       />
 
       {/* Cats Section */}
@@ -257,12 +111,12 @@ const HomePage = () => {
       {!loading ? (
         <div className="w-full grid grid-cols-1 justify-center items-center">
           <div className="grid max-[400px]:grid-cols-1 grid-cols-2 gap-4 sm:grid-cols-3 max-[430px]:gap-4 max-[400px]:gap-3 sm:gap-x-10 mx-auto justify-center items-center">
-            {getPaginatedData(catData, catPage).map((cat) => (
+            {getPaginatedData(catData.cats, catPage).map((cat) => (
               <Card key={cat.id} id={cat.id} {...cat} />
             ))}
           </div>
           <div className="flex items-center justify-center space-x-4 mt-4">
-            {renderPageNumbers(catPage, totalPages(catData), setCatPage)}
+            {renderPageNumbers(catPage, catData.last_page, setCatPage)}
           </div>
         </div>
       ) : (
@@ -282,12 +136,12 @@ const HomePage = () => {
       {!loading ? (
         <div className="w-full grid grid-cols-1 justify-center items-center">
           <div className="grid max-[430px]:grid-cols-2 grid-cols-2 gap-4 sm:grid-cols-3 max-[430px]:gap-4 max-[400px]:gap-5 sm:gap-x-10 mx-auto justify-center items-center">
-            {getPaginatedData(dogData, dogPage).map((dog) => (
+            {getPaginatedData(dogData.dogs, dogPage).map((dog) => (
               <Card key={dog.id} id={dog.id} {...dog} />
             ))}
           </div>
           <div className="flex items-center justify-center space-x-4 mt-4">
-            {renderPageNumbers(dogPage, totalPages(dogData), setDogPage)}
+            {renderPageNumbers(dogPage, dogData.last_page, setDogPage)}
           </div>
         </div>
       ) : (

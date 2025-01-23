@@ -11,12 +11,12 @@ export default function Card(pet, { canDelete = false }) {
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false); // State to manage loading during deletion
 
-  const handleEditClick = () => {
-    console.log("Card: ", pet);
-    navigate("/update-pet", {
-      state: { pet }, // Pass the pet object to the update page
-    });
-  };
+  // const handleEditClick = () => {
+  //   console.log("Card: ", pet);
+  //   navigate("/update-pet", {
+  //     state: { pet }, // Pass the pet object to the update page
+  //   });
+  // };
   const handleCardClick = () => {
     navigate(`/pet/${pet.id}`, {
       state: { pet },
@@ -27,7 +27,7 @@ export default function Card(pet, { canDelete = false }) {
     try {
       setIsDeleting(true); // Set loading state
       const token = getCookie("auth_token"); // Assuming you have a function to get the cookie
-      const response = await fetch("http://127.0.0.1:8000/api/user/deletepet", {
+      const response = await fetch(`${import.meta.env.VITE_BACKEND_URLL}user/deletepet`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function Card(pet, { canDelete = false }) {
       if (response.ok) {
         // Handle successful delete, maybe refresh the page or update the state
         toast.success("Pet deleted:", result);
-        navigate("/profile");
+        window.location.reload();
       } else {
         // Handle errors (e.g., validation or backend errors)
         toast.error("Delete failed:", result);
@@ -65,7 +65,7 @@ export default function Card(pet, { canDelete = false }) {
       <div className="max-[400px]:w-[90px] max-[400px]:h-[100px] max-[430px]:w-[100px] max-[430px]:h-[80px] max-[560px]:w-[125px] max-[560px]:h-[130px] sm:w-[140px] sm:h-[140px] md:w-[155px] md:h-[150px] lg:w-[155px] lg:h-[155px] xl:w-[170px] xl:h-[180px] 2xl:w-[255px] 2xl:h-[220px] mx-auto">
         <img
           onClick={handleCardClick}
-          src={pet.images[0]}
+          src={pet.images[0].url}
           alt={pet.name}
           className="w-full h-full rounded-[20px]"
         />
@@ -78,31 +78,31 @@ export default function Card(pet, { canDelete = false }) {
         <div className="flex items-center">
           {pet.canDelete ? (
             <div className="flex items-center justify-between space-x-1">
-              <div className="rounded-full bg-white sm:p-1 p-1">
+              {/* <div className="rounded-full bg-white sm:p-1 p-1">
                 <svg
                   onClick={handleEditClick}
                   className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-5 md:h-5 sm:w-5 sm:h-5 max-[430px]:w-4 max-[430px]:h-4 max-[400px]:w-4 max-[400px]:h-4 inline-block text-[#424242] hover:text-[#7BCFD180] rounded cursor-pointer"
-                  viewBox="0 0 24 24" 
+                  viewBox="0 0 24 24"
                   version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
                 >
-                  <path 
-                    d="M4 20h4l10-10-4-4L4 16v4z" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    stroke-width="2" 
-                    stroke-linecap="round" 
+                  <path
+                    d="M4 20h4l10-10-4-4L4 16v4z"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
                     stroke-linejoin="round"
                   />
-                  <path 
-                    d="M14 6l4 4" 
-                    fill="none" 
-                    stroke="currentColor" 
-                    stroke-width="2" 
-                    stroke-linecap="round" 
+                  <path
+                    d="M14 6l4 4"
+                    fill="none"
+                    stroke="currentColor"
+                    stroke-width="2"
+                    stroke-linecap="round"
                     stroke-linejoin="round"
                   />
                 </svg>
-              </div>
+              </div> */}
               <div className="rounded-full bg-white sm:p-1 p-1">
                 <svg
                   onClick={(e) => {

@@ -6,9 +6,11 @@ import Cookies from "js-cookie"; // Import js-cookie
 import cam from "../assets/AddPetPage/cam.png";
 import dogImage from "../assets/SignUpPage/SignupDog.png";
 import BackButton from "../components/BackButton";
-
+import { useLocation } from "react-router-dom";
 const UpdatePet = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const pet = location.state.pet;
   const [formData, setFormData] = useState({
     id: pet.id,
     pet_name: pet.name,

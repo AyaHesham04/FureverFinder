@@ -10,7 +10,7 @@ import femaleDark from "../../assets/HomePage/femaleDark.png";
 import maleDark from "../../assets/HomePage/maleDark.png";
 import { toast } from "react-toastify";
 
-const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
+const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading, catPage, dogPage }) => {
   const [selectedPet, setSelectedPet] = useState("");
   const [selectedGender, setSelectedGender] = useState("");
   const [selectedAge, setSelectedAge] = useState("");
@@ -18,15 +18,14 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
 
   const fetchPets = async () => {
     try {
-      const response = await axios.post("http://127.0.0.1:8000/api/pets/index");
-
+      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URLL}pets/index?paginate=6`);
       const data = response.data; // Axios automatically parses JSON response
       // Map the data and send it directly to parent
-      const formattedCatData = data.cats.map((cat) => ({
+      const formattedCatData = data.cats.data.map((cat) => ({
         id: cat.id,
         name: cat.pet_name,
         gender: cat.gender,
-        images: cat.images.map((image) => `data:image/jpeg;base64,${image}`), // Convert base64 to image URL
+        images: cat.images,
         year: cat.year,
         month: cat.month,
         weight: cat.weight,
@@ -41,12 +40,16 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
           phone: cat.user.phone,
         },
       }));
+      const resultCat = {
+        cats: formattedCatData,
+        last_page: data.cats.last_page, // Add last_page to the result
+      };
 
-      const formattedDogData = data.dogs.map((dog) => ({
+      const formattedDogData = data.dogs.data.map((dog) => ({
         id: dog.id,
         name: dog.pet_name,
         gender: dog.gender,
-        images: dog.images.map((image) => `data:image/jpeg;base64,${image}`), // Convert base64 to image URL
+        images: dog.images,
         year: dog.year,
         month: dog.month,
         weight: dog.weight,
@@ -62,9 +65,13 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         },
       }));
 
+      const resultDog = {
+        dogs: formattedDogData,
+        last_page: data.dogs.last_page, // Add last_page to the result
+      };
       // Pass data to parent handlers
-      onUpdateCatData(formattedCatData.slice(0, 3));
-      onUpdateDogData(formattedDogData.slice(0, 3));
+      onUpdateCatData(resultCat);
+      onUpdateDogData(resultDog);
     } catch (error) {
       console.error("Error fetching pets data:", error);
     } finally {
@@ -76,11 +83,13 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
   useEffect(() => {
     fetchPets();
   }, []);
+  useEffect(() => {
+    handleSearch();
+  }, [catPage, dogPage]);
   const handleSearch = async () => {
     onUpdateLoading(true);
     try {
       const params = new URLSearchParams();
-      params.append("full", true);
       if (selectedPet !== "") {
         params.append("pet_type", selectedPet.value);
       }
@@ -92,6 +101,9 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
         params.append("gender", selectedGender.value);
       }
 
+      params.append("cat_page", catPage);
+      params.append("dog_page", dogPage);
+      params.append("paginate", 6);
       if (selectedAge !== "") {
         console.log("label:", selectedAge.label);
 
@@ -106,10 +118,10 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       const formData = new FormData();
 
       const queryString = params.toString(); // Convert params to query string
-      const apiUrl = `http://127.0.0.1:8000/api/pets/index?${queryString}`;
+      const apiUrl = `${import.meta.env.VITE_BACKEND_URLL}pets/index?${queryString}`;
 
       // Make the POST request with FormData
-      const response = await axios.post(
+      const response = await axios.get(
         apiUrl,
         formData,
         {
@@ -123,59 +135,57 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading }) => {
       // Directly access response.data
       const data = response.data;
 
-      const formattedCatData = Array.isArray(data.cats)
-        ? data.cats.map((cat) => ({
-          id: cat.id,
-          name: cat.pet_name,
-          gender: cat.gender,
-          images: cat.images.map(
-            (image) => `data:image/jpeg;base64,${image}`
-          ), // Convert base64 to image URL
-          year: cat.year,
-          month: cat.month,
-          weight: cat.weight,
-          description: cat.description,
-          user_id: cat.user_id,
-          created_at: cat.created_at,
-          status: cat.status,
-          user: {
-            email: cat.user?.email,
-            fname: cat.user?.fname,
-            lname: cat.user?.lname,
-            phone: cat.user?.phone,
-          },
-        }))
-        : [];
+      const formattedCatData = data.cats.data.map((cat) => ({
+        id: cat.id,
+        name: cat.pet_name,
+        gender: cat.gender,
+        images: cat.images,
+        year: cat.year,
+        month: cat.month,
+        weight: cat.weight,
+        description: cat.description,
+        user_id: cat.user_id,
+        created_at: cat.created_at,
+        status: cat.status,
+        user: {
+          email: cat.user.email,
+          fname: cat.user.fname,
+          lname: cat.user.lname,
+          phone: cat.user.phone,
+        },
+      }));
+      const resultCat = {
+        cats: formattedCatData,
+        last_page: data.cats.last_page, // Add last_page to the result
+      };
 
-      const formattedDogData = Array.isArray(data.dogs)
-        ? data.dogs.map((dog) => ({
-          id: dog.id,
-          name: dog.pet_name,
-          gender: dog.gender,
-          images: dog.images.map(
-            (image) => `data:image/jpeg;base64,${image}`
-          ), // Convert base64 to image URL
-          year: dog.year,
-          month: dog.month,
-          weight: dog.weight,
-          description: dog.description,
-          user_id: dog.user_id,
-          created_at: dog.created_at,
-          status: dog.status,
-          user: {
-            email: dog.user?.email,
-            fname: dog.user?.fname,
-            lname: dog.user?.lname,
-            phone: dog.user?.phone,
-          },
-        }))
-        : [];
+      const formattedDogData = data.dogs.data.map((dog) => ({
+        id: dog.id,
+        name: dog.pet_name,
+        gender: dog.gender,
+        images: dog.images,
+        year: dog.year,
+        month: dog.month,
+        weight: dog.weight,
+        description: dog.description,
+        user_id: dog.user_id,
+        created_at: dog.created_at,
+        status: dog.status,
+        user: {
+          email: dog.user.email,
+          fname: dog.user.fname,
+          lname: dog.user.lname,
+          phone: dog.user.phone,
+        },
+      }));
 
+      const resultDog = {
+        dogs: formattedDogData,
+        last_page: data.dogs.last_page, // Add last_page to the result
+      };
       // Pass data to parent handlers
-      onUpdateCatData(formattedCatData);
-      onUpdateDogData(formattedDogData);
-    } catch (error) {
-      console.error("Error fetching pets data:", error);
+      onUpdateCatData(resultCat);
+      onUpdateDogData(resultDog);
     } finally {
       // Update loading state in the parent
       onUpdateLoading(false);

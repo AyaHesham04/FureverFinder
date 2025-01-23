@@ -17,7 +17,7 @@ const ProtectedRoute = ({ children, redirectTo = "/login" }) => {
     }
 
     axios
-      .get("http://127.0.0.1:8000/api/user/show", {
+      .get(`${import.meta.env.VITE_BACKEND_URLL}user/show`, {
         headers: { Authorization: `Bearer ${authToken}` },
       })
       .then((response) => {
@@ -28,7 +28,6 @@ const ProtectedRoute = ({ children, redirectTo = "/login" }) => {
         setIsAuthenticated(false);
       });
   }, []);
-
   if (isAuthenticated === null) {
     // Show a loading indicator while verifying the token
     return <div>Loading...</div>;

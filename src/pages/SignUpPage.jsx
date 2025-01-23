@@ -28,10 +28,9 @@ const Signup = () => {
     e.preventDefault();
     setLoading(true);
     setErrors({}); // Reset errors on each submit
-
     try {
       const response = await axios.post(
-        "http://127.0.0.1:8000/api/register",
+        `${import.meta.env.VITE_BACKEND_URLL}register`,
         formData
       );
 
