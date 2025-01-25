@@ -120,7 +120,7 @@ const Menu = () => {
       {/* Hamburger Icon */}
       <button onClick={toggleMenu} className="p-2">
         <svg
-          className="w-8 h-8 max-[430px]:w-5 max-[430px]:h-5"
+          className="w-8 h-8 max-[430px]:w-9 max-[430px]:h-9"
           fill="none"
           stroke="currentColor"
           viewBox="0 0 24 24"
@@ -138,53 +138,53 @@ const Menu = () => {
       {/* Dropdown Menu */}
       <div
         ref={menuRef} // Attach the ref to the dropdown menu
-        className={`absolute top-full left-3 max-[430px]:left-2 mt-2 max-[430px]:mt-0 max-[400px]:-mt-1 2xl:w-56 xl:w-52 lg:w-48 md:w-44 sm:w-36 max-[430px]:w-24 max-[400px]:w-22 bg-white shadow-md rounded-md transition-all ${isOpen ? "block" : "hidden"
+        className={`absolute top-full left-3 max-[430px]:left-2 mt-2 max-[430px]:mt-0 max-[400px]:-mt-1 2xl:w-56 xl:w-52 lg:w-48 md:w-44 sm:w-36 max-[430px]:w-42 max-[400px]:w-[220px] bg-white shadow-md rounded-md transition-all ${isOpen ? "block" : "hidden"
           }`}
       >
-        <ul className="font-poppins font-semibold text-[#5F5B5B] 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[9px] p-1.5 md:p-3 max-[430px]:p-1 space-y-2 max-[430px]:space-y-1">
+        <ul className="font-poppins font-semibold text-[#5F5B5B] 2xl:text-[19px] xl:text-[17px] lg:text-[15px] md:text-[14px] sm:text-[11px] max-[430px]:text-[20px] p-1.5 md:p-3 max-[430px]:p-2 space-y-2 max-[430px]:space-y-3.5">
           <Link
             to="/add-pet"
-            className="block px-4 max-[430px]:px-1 py-2 rounded-lg hover:bg-[#7BCFD180]"
+            className="block px-4 max-[430px]:px-2 py-2 rounded-lg hover:bg-[#7BCFD180]"
           >
             <img
               src={addPet}
               alt="Add Pet"
-              className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-3 max-[430px]:h-3 inline-block mr-1"
+              className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-8 max-[430px]:h-8 inline-block mr-1"
             />
             Add Your Pet
           </Link>
           <Link
             to="/profile"
-            className="block px-4 max-[430px]:px-1 py-2 rounded-lg hover:bg-[#7BCFD180]"
+            className="block px-4 max-[430px]:px-2 py-2 rounded-lg hover:bg-[#7BCFD180]"
           >
             <img
               src={user}
               alt="user"
-              className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-3 max-[430px]:h-3 inline-block mr-1"
+              className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-8 max-[430px]:h-8 inline-block mr-1"
             />
             Profile
           </Link>
           {isLoggedIn ? (
             <Link
               onClick={handleLogout}
-              className="block px-4 max-[430px]:px-1 py-2 rounded-lg hover:bg-[#7BCFD180]"
+              className="block px-4 max-[430px]:px-2 py-2 rounded-lg hover:bg-[#7BCFD180]"
             >
               <img
                 src={logout}
                 alt="logout"
-                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-3 max-[430px]:h-3 inline-block mr-1"
+                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-8 max-[430px]:h-8 inline-block mr-1"
               />
               Logout
             </Link>
           ) : (
             <Link
               to="/login"
-              className="block px-4 max-[430px]:px-1 py-2 rounded-lg hover:bg-[#7BCFD180]"
+              className="block px-4 max-[430px]:px-2 py-2 rounded-lg hover:bg-[#7BCFD180]"
             >
               <img
                 src={logout}
                 alt="login"
-                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-3 max-[430px]:h-3 inline-block mr-1"
+                className="2xl:w-8 2xl:h-8 xl:w-8 xl:h-8 lg:w-7 lg:h-7 md:w-6 md:h-6 sm:w-5 sm:h-5 max-[430px]:w-8 max-[430px]:h-8 inline-block mr-1"
               />
               Login
             </Link>

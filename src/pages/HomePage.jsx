@@ -88,10 +88,6 @@ const HomePage = () => {
   return (
     <div className="w-full h-screen">
       <HomePageStart />
-      {
-        console.log(catData)
-
-      }
       <FilterBar
         onUpdateCatData={handleCatDataUpdate}
         onUpdateDogData={handleDogDataUpdate}
