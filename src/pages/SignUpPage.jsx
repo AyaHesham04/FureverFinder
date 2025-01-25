@@ -30,7 +30,7 @@ const Signup = () => {
     setErrors({}); // Reset errors on each submit
     try {
       const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URLL}register`,
+        `https://api-fureverfinders.amrnabih.com/api/register`,
         formData
       );
 

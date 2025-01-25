@@ -6,7 +6,7 @@ import { useState } from "react";
 import { toast } from "react-toastify";
 
 // eslint-disable-next-line react/prop-types
-export default function Card(pet, { canDelete = false }) {
+export default function Card(pet, { canDelete = false }, onDelete, type) {
   // Add `id` to props
   const navigate = useNavigate();
   const [isDeleting, setIsDeleting] = useState(false); // State to manage loading during deletion
@@ -27,7 +27,7 @@ export default function Card(pet, { canDelete = false }) {
     try {
       setIsDeleting(true); // Set loading state
       const token = getCookie("auth_token"); // Assuming you have a function to get the cookie
-      const response = await fetch(`${import.meta.env.VITE_BACKEND_URLL}user/deletepet`, {
+      const response = await fetch(`https://api-fureverfinders.amrnabih.com/api/user/deletepet`, {
         method: "DELETE",
         headers: {
           "Content-Type": "application/json",
@@ -44,7 +44,7 @@ export default function Card(pet, { canDelete = false }) {
       if (response.ok) {
         // Handle successful delete, maybe refresh the page or update the state
         toast.success("Pet deleted:", result);
-        window.location.reload();
+        onDelete(pet.id);
       } else {
         // Handle errors (e.g., validation or backend errors)
         toast.error("Delete failed:", result);

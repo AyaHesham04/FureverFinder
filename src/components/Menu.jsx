@@ -28,7 +28,7 @@ const Menu = () => {
   const validateToken = async (token) => {
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URLL}user/show`
+        `https://api-fureverfinders.amrnabih.com/api/user/show`
         , {
           method: "GET",
           headers: {
@@ -58,7 +58,7 @@ const Menu = () => {
 
     try {
       const response = await fetch(
-        `${import.meta.env.VITE_BACKEND_URLL}logout`
+        `https://api-fureverfinders.amrnabih.com/api/logout`
         , {
           method: "POST",
           headers: {

@@ -18,7 +18,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading, catPage,
 
   const fetchPets = async () => {
     try {
-      const response = await axios.get(`${import.meta.env.VITE_BACKEND_URLL}pets/index?paginate=6`);
+      const response = await axios.get(`https://api-fureverfinders.amrnabih.com/api/pets/index?paginate=6`);
       const data = response.data; // Axios automatically parses JSON response
       // Map the data and send it directly to parent
       const formattedCatData = data.cats.data.map((cat) => ({
@@ -118,7 +118,7 @@ const FilterBar = ({ onUpdateCatData, onUpdateDogData, onUpdateLoading, catPage,
       const formData = new FormData();
 
       const queryString = params.toString(); // Convert params to query string
-      const apiUrl = `${import.meta.env.VITE_BACKEND_URLL}pets/index?${queryString}`;
+      const apiUrl = `https://api-fureverfinders.amrnabih.com/api/pets/index?${queryString}`;
 
       // Make the POST request with FormData
       const response = await axios.get(

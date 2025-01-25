@@ -1,10 +1,6 @@
 import { useState, useEffect } from "react";
 import Card from "../components/Card";
 import background from "../assets/PetDetailsPage/PetDetailsBack.png";
-
-import temp1 from "../assets/TemporaryImages/cat1.jpg";
-import temp2 from "../assets/TemporaryImages/cat2.jpg";
-import temp3 from "../assets/TemporaryImages/cat3.jpg";
 import BackButton from "../components/BackButton";
 
 function ProfilePage({ userData }) {
@@ -15,6 +11,7 @@ function ProfilePage({ userData }) {
   const capitalize = (str) => {
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   };
+
   useEffect(() => {
     if (userData?.user?.fname && userData?.user?.lname) {
       setFullName(
@@ -67,6 +64,19 @@ function ProfilePage({ userData }) {
     );
   }, [userData]);
 
+  // Function to handle pet deletion
+  const handleDeletePet = (deletedPetId, type) => {
+    if (type === "cat") {
+      setCatData((prevCatData) =>
+        prevCatData.filter((cat) => cat.id !== deletedPetId)
+      );
+    } else if (type === "dog") {
+      setDogData((prevDogData) =>
+        prevDogData.filter((dog) => dog.id !== deletedPetId)
+      );
+    }
+  };
+
   return (
     <div className="relative w-screen h-screen overflow-hidden">
       <BackButton></BackButton>
@@ -80,10 +90,22 @@ function ProfilePage({ userData }) {
           <div className="w-full flex justify-center py-6 overflow-y-auto scrollbar-hide">
             <div className="grid max-[430px]:grid-cols-2 grid-cols-2 gap-2 sm:grid-cols-3 max-[430px]:gap-4 max-[400px]:gap-2 sm:gap-x-4 mx-auto justify-center items-center">
               {catData.map((cat, index) => (
-                <Card key={index} {...cat} canDelete={true} type="cat" />
+                <Card
+                  key={index}
+                  {...cat}
+                  canDelete={true}
+                  onDelete={(id) => handleDeletePet(id, "cat")} // Pass the callback
+                  type="cat"
+                />
               ))}
-              {dogData.map((cat, index) => (
-                <Card key={index} {...cat} canDelete={true} type="dog" />
+              {dogData.map((dog, index) => (
+                <Card
+                  key={index}
+                  {...dog}
+                  canDelete={true}
+                  onDelete={(id) => handleDeletePet(id, "dog")} // Pass the callback
+                  type="dog"
+                />
               ))}
             </div>
           </div>
